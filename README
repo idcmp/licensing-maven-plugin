@@ -1,0 +1,15 @@
+Your situation is that you work at a company and you'd like to keep an eye on which projects depend on which dependencies.  You *could* do it in a repository manager or some such, but the truth is, some projects you have may have different needs.
+
+This licensing plugin works off zero or more *licensing-requirements.xml* files (named as you like) found in its classpath (which means you can include it as a dependency).
+
+When you run *licensing:check*, it ensures that:
+
+# all your dependencies have licenses.
+# all your dependencies are licensed in at least one liked license.
+
+Often, something goes wrong so the *licensing-requirements.xml* comes in handy.
+
+In that file you can specify the license for artifacts (GAV) which are missing licenses.  You also list which licenses you dislike (we blacklist).
+
+Two other things go in that file.  First, you can coalesce license names and you can mark certain artifacts as being exempt from being disliked.
+

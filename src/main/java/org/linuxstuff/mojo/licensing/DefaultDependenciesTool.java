@@ -46,7 +46,8 @@ import org.codehaus.plexus.logging.Logger;
  * Default implementation of the {@link DependenciesTool}.
  * 
  * @author tchemit <chemit@codelutin.com>
- * @plexus.component role="org.linuxstuff.mojo.licensing.DependenciesTool" role-hint="default"
+ * @plexus.component role="org.linuxstuff.mojo.licensing.DependenciesTool"
+ *                   role-hint="default"
  * @since 1.0
  */
 public class DefaultDependenciesTool extends AbstractLogEnabled implements DependenciesTool {
@@ -63,8 +64,9 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 	/**
 	 * {@inheritDoc}
 	 */
-	public SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project, MavenProjectDependenciesConfigurator configuration,
-			ArtifactRepository localRepository, List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache) {
+	public SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project,
+			MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
+			List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache) {
 
 		boolean haveNoIncludedGroups = StringUtils.isEmpty(configuration.getIncludedGroups());
 		boolean haveNoIncludedArtifacts = StringUtils.isEmpty(configuration.getIncludedArtifacts());
@@ -136,7 +138,8 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 					|| isIncludable(artifact, includedGroupPattern, includedArtifactPattern);
 
 			// Check if the project should be excluded
-			boolean isToExclude = isToInclude && haveExclusions && isExcludable(artifact, excludedGroupPattern, excludedArtifactPattern);
+			boolean isToExclude = isToInclude && haveExclusions
+					&& isExcludable(artifact, excludedGroupPattern, excludedArtifactPattern);
 
 			if (!isToInclude || isToExclude) {
 				log.debug("skip artifact " + id);
@@ -158,7 +161,8 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 				// build project
 
 				try {
-					depMavenProject = mavenProjectBuilder.buildFromRepository(artifact, remoteRepositories, localRepository, true);
+					depMavenProject = mavenProjectBuilder.buildFromRepository(artifact, remoteRepositories,
+							localRepository, true);
 				} catch (ProjectBuildingException e) {
 					log.warn("Unable to obtain POM for artifact : " + artifact, e);
 					continue;

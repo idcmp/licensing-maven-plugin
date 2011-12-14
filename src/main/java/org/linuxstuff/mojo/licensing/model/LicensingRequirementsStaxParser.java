@@ -13,8 +13,8 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 /**
- * I'm using stax instead of jaxb since I'm likely going to need to make changes to the XML format and I don't want to be fighting JAXB down the
- * road.
+ * I'm using stax instead of jaxb since I'm likely going to need to make changes
+ * to the XML format and I don't want to be fighting JAXB down the road.
  */
 public class LicensingRequirementsStaxParser {
 
@@ -62,10 +62,12 @@ public class LicensingRequirementsStaxParser {
 
 	}
 
-	private void readDislikeExemptions(XMLEventReader eventReader, LicensingRequirements licensingRequirements) throws XMLStreamException {
+	private void readDislikeExemptions(XMLEventReader eventReader, LicensingRequirements licensingRequirements)
+			throws XMLStreamException {
 		while (eventReader.hasNext()) {
 			XMLEvent event = eventReader.nextEvent();
-			if (event.isEndElement() && ((EndElement) event.asEndElement()).getName().getLocalPart().equals(DISLIKE_EXEMPTIONS)) {
+			if (event.isEndElement()
+					&& ((EndElement) event.asEndElement()).getName().getLocalPart().equals(DISLIKE_EXEMPTIONS)) {
 				return;
 			}
 			if (event.isStartElement()) {
@@ -74,8 +76,8 @@ public class LicensingRequirementsStaxParser {
 				if (ARTIFACT.equals(localPart)) {
 					Attribute idAttribute = startElement.getAttributeByName(QName.valueOf(ID));
 					if (idAttribute == null) {
-						throw new XMLStreamException("In " + DISLIKE_EXEMPTIONS + ", the " + ARTIFACT + " element requires the " + ID
-								+ " attribute.");
+						throw new XMLStreamException("In " + DISLIKE_EXEMPTIONS + ", the " + ARTIFACT
+								+ " element requires the " + ID + " attribute.");
 					}
 
 					licensingRequirements.addDislikedExemption(idAttribute.getValue());
@@ -87,10 +89,12 @@ public class LicensingRequirementsStaxParser {
 
 	}
 
-	private void readDislikedLicenses(XMLEventReader eventReader, LicensingRequirements licensingRequirements) throws XMLStreamException {
+	private void readDislikedLicenses(XMLEventReader eventReader, LicensingRequirements licensingRequirements)
+			throws XMLStreamException {
 		while (eventReader.hasNext()) {
 			XMLEvent event = eventReader.nextEvent();
-			if (event.isEndElement() && ((EndElement) event.asEndElement()).getName().getLocalPart().equals(DISLIKED_LICENSES)) {
+			if (event.isEndElement()
+					&& ((EndElement) event.asEndElement()).getName().getLocalPart().equals(DISLIKED_LICENSES)) {
 				return;
 			}
 			if (event.isStartElement()) {
@@ -99,7 +103,8 @@ public class LicensingRequirementsStaxParser {
 				if (LICENSE.equals(localPart)) {
 					Attribute licenseAttribute = startElement.getAttributeByName(QName.valueOf(NAME));
 					if (licenseAttribute == null) {
-						throw new XMLStreamException("In " + DISLIKED_LICENSES + ", the " + LICENSE + " element requires a " + NAME + " attribute.");
+						throw new XMLStreamException("In " + DISLIKED_LICENSES + ", the " + LICENSE
+								+ " element requires a " + NAME + " attribute.");
 					}
 					licensingRequirements.addDislikedLicense(licenseAttribute.getValue());
 
@@ -110,11 +115,13 @@ public class LicensingRequirementsStaxParser {
 
 	}
 
-	private void readCoalesceLicenses(XMLEventReader eventReader, LicensingRequirements licensingRequirements) throws XMLStreamException {
+	private void readCoalesceLicenses(XMLEventReader eventReader, LicensingRequirements licensingRequirements)
+			throws XMLStreamException {
 		String licenseName = null;
 		while (eventReader.hasNext()) {
 			XMLEvent event = eventReader.nextEvent();
-			if (event.isEndElement() && ((EndElement) event.asEndElement()).getName().getLocalPart().equals(COALESCE_LICENSES)) {
+			if (event.isEndElement()
+					&& ((EndElement) event.asEndElement()).getName().getLocalPart().equals(COALESCE_LICENSES)) {
 				return;
 			}
 			if (event.isStartElement()) {
@@ -123,7 +130,8 @@ public class LicensingRequirementsStaxParser {
 				if (LICENSE.equals(localPart)) {
 					Attribute licenseAttribute = startElement.getAttributeByName(QName.valueOf(NAME));
 					if (licenseAttribute == null) {
-						throw new XMLStreamException("In " + COALESCE_LICENSES + ", the " + LICENSE + " element requires a " + NAME + " attribute.");
+						throw new XMLStreamException("In " + COALESCE_LICENSES + ", the " + LICENSE
+								+ " element requires a " + NAME + " attribute.");
 					}
 					licenseName = licenseAttribute.getValue();
 
@@ -137,10 +145,12 @@ public class LicensingRequirementsStaxParser {
 
 	}
 
-	private void readArtifactsMissingLicenses(XMLEventReader eventReader, LicensingRequirements licensingRequirements) throws XMLStreamException {
+	private void readArtifactsMissingLicenses(XMLEventReader eventReader, LicensingRequirements licensingRequirements)
+			throws XMLStreamException {
 		while (eventReader.hasNext()) {
 			XMLEvent event = eventReader.nextEvent();
-			if (event.isEndElement() && ((EndElement) event.asEndElement()).getName().getLocalPart().equals(ARTIFACTS_MISSING_LICENSES)) {
+			if (event.isEndElement()
+					&& ((EndElement) event.asEndElement()).getName().getLocalPart().equals(ARTIFACTS_MISSING_LICENSES)) {
 				return;
 			}
 			if (event.isStartElement()) {
@@ -162,8 +172,9 @@ public class LicensingRequirementsStaxParser {
 
 					}
 					if (id == null || licenseName == null) {
-						throw new XMLStreamException("When specifying " + ARTIFACTS_MISSING_LICENSES + " all artifacts require both a " + LICENSE
-								+ " and " + ID + " (" + ID + "=" + id + ", " + LICENSE + "=" + licenseName + ")");
+						throw new XMLStreamException("When specifying " + ARTIFACTS_MISSING_LICENSES
+								+ " all artifacts require both a " + LICENSE + " and " + ID + " (" + ID + "=" + id
+								+ ", " + LICENSE + "=" + licenseName + ")");
 					}
 					licensingRequirements.addMissingLicense(id, licenseName);
 				}

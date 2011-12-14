@@ -1,16 +1,12 @@
 package org.linuxstuff.mojo.licensing;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -45,15 +41,25 @@ public class CheckMojo extends AbstractLicensingMojo {
 	 */
 	protected boolean failIfDisliked;
 
+	private LicensingReport report;
+
 	/**
-	 * Fail the build if any dependencies are either under disliked licenses or are missing licensing information.
+	 * Fail the build if any dependencies are either under disliked licenses or
+	 * are missing licensing information.
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
 		int dislikedArtifacts = 0, missingLicense = 0;
 		readLicensingRequirements();
 
-		Document doc = createDocument();
+		report = new LicensingReport();
+		try {
+			report.initialize();
+		} catch (ParserConfigurationException e) {
+			throw new MojoExecutionException("Failed to initialize LicensingReport", e);
+		}
+
+		Document doc = report.getDocument();
 		Element root = doc.createElement("licensing");
 		Element artifacts = doc.createElement("artifacts");
 		Element missing = doc.createElement("license-missing");
@@ -86,7 +92,7 @@ public class CheckMojo extends AbstractLicensingMojo {
 			}
 
 			if (!licenses.isEmpty() && isDisliked(mavenProject)) {
-				getLog().warn("Licensing: The artifact " + mavenProject.getId() + " is under a disliked license.");
+				getLog().warn("Licensing: The artifact " + mavenProject.getId() + " is only under a disliked license.");
 				dislikedArtifacts++;
 				disliked.appendChild(artifact.cloneNode(true));
 			}
@@ -97,51 +103,36 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 		root.setAttribute("missing-licenses", "" + missingLicense);
 		root.setAttribute("disliked-licenses", "" + dislikedArtifacts);
+		root.setAttribute(LICENSING_CHECK, (missingLicense + dislikedArtifacts > 0) ? "fail" : "pass");
+		writeReport();
 
 		if (dislikedArtifacts > 0 && missingLicense > 0 && failIfDisliked && failIfMissing) {
-			root.setAttribute(LICENSING_CHECK, "fail");
-			writeDocument(doc);
-			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact" + ((dislikedArtifacts == 1) ? "" : "s")
-					+ " and " + missingLicense + " artifact" + ((missingLicense == 1) ? "" : "s") + " missing licensing information.");
+			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact"
+					+ ((dislikedArtifacts == 1) ? "" : "s") + " and " + missingLicense + " artifact"
+					+ ((missingLicense == 1) ? "" : "s") + " missing licensing information.");
 		} else if (missingLicense > 0 && failIfMissing) {
-			root.setAttribute(LICENSING_CHECK, "fail");
-			writeDocument(doc);
-			throw new MojoFailureException("This project has " + missingLicense + " artifact" + ((missingLicense == 1) ? "" : "s")
-					+ " missing licensing information.");
+			throw new MojoFailureException("This project has " + missingLicense + " artifact"
+					+ ((missingLicense == 1) ? "" : "s") + " missing licensing information.");
 		} else if (dislikedArtifacts > 0 && failIfDisliked) {
-			root.setAttribute(LICENSING_CHECK, "fail");
-			writeDocument(doc);
-			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact" + ((dislikedArtifacts == 1) ? "" : "s")
-					+ ".");
+			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact"
+					+ ((dislikedArtifacts == 1) ? "" : "s") + ".");
 		}
-
-		root.setAttribute(LICENSING_CHECK, "pass");
-		writeDocument(doc);
 
 	}
 
-	private void writeDocument(Document doc) throws MojoExecutionException {
+	private void writeReport() throws MojoExecutionException {
+
+		File file = new File(project.getBuild().getDirectory(), "third-party-licensing.xml");
+
 		try {
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(project.getBuild().getDirectory() + "/third-party-licensing.xml"));
-			transformer.transform(source, result);
-		} catch (Exception e) {
-			throw new MojoExecutionException("Failed to write out XML document.", e);
+			getLog().debug("Writing license report to " + file);
+			FileUtil.createNewFile(file);
+			report.write(file.toString());
+		} catch (TransformerException e) {
+			throw new MojoExecutionException("Failure while writing " + file, e);
+		} catch (IOException e) {
+			throw new MojoExecutionException("Failure while creating new file " + file, e);
 		}
 	}
 
-	private Document createDocument() throws MojoExecutionException {
-		try {
-
-			DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
-			return doc;
-		} catch (Exception e) {
-			throw new MojoExecutionException("Failed to initialize XML", e);
-		}
-	}
 }

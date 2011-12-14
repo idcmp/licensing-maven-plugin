@@ -19,7 +19,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * 
  * @goal check
  * @phase pre-integration-test
  * @requiresDependencyResolution test
@@ -47,8 +46,7 @@ public class CheckMojo extends AbstractLicensingMojo {
 	protected boolean failIfDisliked;
 
 	/**
-	 * Fail the build if any dependencies are either under disliked licenses or
-	 * are missing licensing information.
+	 * Fail the build if any dependencies are either under disliked licenses or are missing licensing information.
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -103,19 +101,18 @@ public class CheckMojo extends AbstractLicensingMojo {
 		if (dislikedArtifacts > 0 && missingLicense > 0 && failIfDisliked && failIfMissing) {
 			root.setAttribute(LICENSING_CHECK, "fail");
 			writeDocument(doc);
-			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact"
-					+ ((dislikedArtifacts == 1) ? "" : "s") + " and " + missingLicense + " artifact"
-					+ ((missingLicense == 1) ? "" : "s") + " missing licensing information.");
+			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact" + ((dislikedArtifacts == 1) ? "" : "s")
+					+ " and " + missingLicense + " artifact" + ((missingLicense == 1) ? "" : "s") + " missing licensing information.");
 		} else if (missingLicense > 0 && failIfMissing) {
 			root.setAttribute(LICENSING_CHECK, "fail");
 			writeDocument(doc);
-			throw new MojoFailureException("This project has " + missingLicense + " artifact"
-					+ ((missingLicense == 1) ? "" : "s") + " missing licensing information.");
+			throw new MojoFailureException("This project has " + missingLicense + " artifact" + ((missingLicense == 1) ? "" : "s")
+					+ " missing licensing information.");
 		} else if (dislikedArtifacts > 0 && failIfDisliked) {
 			root.setAttribute(LICENSING_CHECK, "fail");
 			writeDocument(doc);
-			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact"
-					+ ((dislikedArtifacts == 1) ? "" : "s") + ".");
+			throw new MojoFailureException("This project has " + dislikedArtifacts + " disliked artifact" + ((dislikedArtifacts == 1) ? "" : "s")
+					+ ".");
 		}
 
 		root.setAttribute(LICENSING_CHECK, "pass");
@@ -125,12 +122,11 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 	private void writeDocument(Document doc) throws MojoExecutionException {
 		try {
-			getLog().info("Time to write out...");
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("kapow.xml"));
+			StreamResult result = new StreamResult(new File(project.getBuild().getDirectory() + "/third-party-licensing.xml"));
 			transformer.transform(source, result);
 		} catch (Exception e) {
 			throw new MojoExecutionException("Failed to write out XML document.", e);

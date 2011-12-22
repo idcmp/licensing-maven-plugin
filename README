@@ -13,3 +13,36 @@ In that file you can specify the license for artifacts (GAV) which are missing l
 
 Two other things go in that file.  First, you can coalesce license names and you can mark certain artifacts as being exempt from being disliked.
 
+---
+TODO Here's a rough draft.
+
+So:
+
+You have a project called licensing-requirements.  It has in it 
+DONE List of Licenses You Dislike (end eventually a list of licenses you Like)
+DONE Mapping of Missing Licenses to Artifacts
+DONE Coalesce license names.
+??? Optionally some configuration maybe about how to enforce licensing or something (something misc that may not really be there)
+
+There's a license plugin.  You can run license:check on a project.
+
+DONE Its configuration adds the licensing-requirements as a dependency
+(SORT OF) DONE It finds the files in licensing-requirements through the classpath and uses those
+DONE It generates a third-party-licensing-summary.xml in target/
+NO Could it attach the third-party-licensing to the reactor? -> This makes no sense (since to other projects, this project is simply a dependency (ie, it's a 3rd party))
+DONE It can be configured to fail the build on disliked or missing licenses.
+DONE It's bound to a verify phase.
+There's a license:aggregate sitereport.  It walks the reactorProjects (assuming that if A lists B and B lists C that A,B,C all show up):
+
+IN PROGRESS Looks for third-party-licensing-summary.xml files in target/
+IN PROGRESS Generates an aggregated-third-party-licensing-summary.xml report in target/site
+It should attach that summary to the reactor.
+I guess it could be configured to fail on missing/disliked but I'm not sure that's needed.
+There's a license-report project.  It's what Nancy has.  It:
+
+Lists the aggregate-license-summary of the different reactor builds as dependencies.
+Fetches those and puts them in a target/foo/ directory.
+DONE Merges all of those together into one big XML file. --weak
+DONE Generates a PDF using Jasper Reports from that XML file.
+DONE Attaches the PDF as its artifact to be deployed.
+ 

@@ -24,11 +24,11 @@
  */
 package org.linuxstuff.mojo.licensing;
 
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.project.MavenProject;
-
 import java.util.List;
 import java.util.SortedMap;
+
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.project.MavenProject;
 
 /**
  * A tool to deal with dependencies of a project.

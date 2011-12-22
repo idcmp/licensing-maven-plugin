@@ -11,12 +11,13 @@ import javax.xml.transform.TransformerException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.linuxstuff.mojo.licensing.model.LicensingReport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
  * @goal check
- * @phase pre-integration-test
+ * @phase verify
  * @requiresDependencyResolution test
  * @requiresProject true
  * @since 1.0

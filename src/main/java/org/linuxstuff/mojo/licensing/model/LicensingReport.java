@@ -1,4 +1,4 @@
-package org.linuxstuff.mojo.licensing;
+package org.linuxstuff.mojo.licensing.model;
 
 import java.io.File;
 

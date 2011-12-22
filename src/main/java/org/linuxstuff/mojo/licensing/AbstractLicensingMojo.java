@@ -1,6 +1,7 @@
 package org.linuxstuff.mojo.licensing;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,8 +15,12 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
+import org.linuxstuff.mojo.licensing.model.ArtifactMissingLicense;
+import org.linuxstuff.mojo.licensing.model.CoalescedLicense;
 import org.linuxstuff.mojo.licensing.model.LicensingRequirements;
-import org.linuxstuff.mojo.licensing.model.LicensingRequirementsStaxParser;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
  * Some basic plumbing for licensing mojos. I've borrowed
@@ -153,7 +158,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 */
 	protected List<String> licensingRequirementFiles;
 
-	protected LicensingRequirements licensingRequirements = null;
+	protected LicensingRequirements licensingRequirements;
 
 	/**
 	 * Build a list of artifacts that this project depends on, but resolves them
@@ -178,24 +183,44 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 			return;
 		}
 
-		licensingRequirements = new LicensingRequirements();
+		XStream xstream = new XStream(new StaxDriver());
 
-		LicensingRequirementsStaxParser staxParser = new LicensingRequirementsStaxParser();
+		xstream.processAnnotations(LicensingRequirements.class);
+		xstream.processAnnotations(ArtifactMissingLicense.class);
+		xstream.processAnnotations(CoalescedLicense.class);
 
 		if (licensingRequirementFiles == null) {
 			getLog().debug("No licensing requirement files specified.");
 			return;
 		}
 
+		List<LicensingRequirements> requirements = new ArrayList<LicensingRequirements>();
+
 		for (String requirementsFile : licensingRequirementFiles) {
 
 			try {
-				staxParser.read(licensingRequirements, locator.getResourceAsInputStream(requirementsFile));
-			} catch (Exception e) {
-				throw new MojoExecutionException("Could not read licensing frequirements file: " + requirementsFile);
-			}
+				requirements.add((LicensingRequirements) xstream.fromXML(locator
+						.getResourceAsInputStream(requirementsFile)));
 
+			} catch (Exception e) {
+				throw new MojoExecutionException("Could not read licensing requirements file: " + requirementsFile, e);
+			}
 		}
+
+		this.licensingRequirements = mergeLicenseRequirements(requirements);
+	}
+
+	/**
+	 * Plugin does not yet support merging {@code LicensingRequirements}, but
+	 * when it does, this is where it will do it.
+	 */
+	private LicensingRequirements mergeLicenseRequirements(List<LicensingRequirements> requirements) {
+
+		if (!requirements.isEmpty()) {
+			return requirements.get(0);
+		}
+		return new LicensingRequirements();
+
 	}
 
 	/**
@@ -206,6 +231,10 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 * it is considered disliked.
 	 */
 	protected boolean isDisliked(MavenProject mavenProject) {
+
+		if (licensingRequirements.isExemptFromDislike(mavenProject.getId())) {
+			return false;
+		}
 
 		Set<String> licenses = collectLicensesForMavenProject(mavenProject);
 
@@ -230,7 +259,6 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		 * anything defined in licensing requirements.
 		 */
 		if (mavenProject.getLicenses() != null && mavenProject.getLicenses().size() > 0) {
-			;
 			getLog().debug("Licensing: " + mavenProject.getId() + " has licensing information in it.");
 			licenses = new HashSet<String>();
 

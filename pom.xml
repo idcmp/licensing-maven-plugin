@@ -22,13 +22,27 @@
 		<sitePluginVersion>3.0</sitePluginVersion>
 	</properties>
 
-
 	<build>
 		<plugins>
+
+
+			<plugin>
+				<groupId>com.jakewharton</groupId>
+				<artifactId>github-deploy-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
 				<configuration>
 					<!-- http://maven.apache.org/plugins/maven-compiler-plugin/ -->
 					<source>1.6</source>
@@ -39,7 +53,7 @@
 			<plugin>
 				<groupId>org.codehaus.plexus</groupId>
 				<artifactId>plexus-component-metadata</artifactId>
-				<version>1.5.4</version>
+				<version>1.5.5</version>
 				<executions>
 					<execution>
 						<goals>

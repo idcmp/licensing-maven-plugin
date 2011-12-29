@@ -34,8 +34,8 @@ DONE It can be configured to fail the build on disliked or missing licenses.
 DONE It's bound to a verify phase.
 There's a license:aggregate sitereport.  It walks the reactorProjects (assuming that if A lists B and B lists C that A,B,C all show up):
 
-IN PROGRESS Looks for third-party-licensing-summary.xml files in target/
-IN PROGRESS Generates an aggregated-third-party-licensing-summary.xml report in target/site
+DONE Looks for third-party-licensing-summary.xml files in target/
+DONE Generates an aggregated-third-party-licensing-summary.xml report in target/site
 It should attach that summary to the reactor.
 I guess it could be configured to fail on missing/disliked but I'm not sure that's needed.
 There's a license-report project.  It's what Nancy has.  It:

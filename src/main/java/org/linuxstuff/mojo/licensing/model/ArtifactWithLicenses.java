@@ -1,0 +1,78 @@
+package org.linuxstuff.mojo.licensing.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+@XStreamAlias("artifact")
+public class ArtifactWithLicenses {
+
+	@XStreamAsAttribute
+	@XStreamAlias("id")
+	private String artifactId;
+
+	@XStreamImplicit(itemFieldName = "license")
+	private Set<String> licenses;
+
+	public ArtifactWithLicenses() {
+		licenses = new HashSet<String>();
+	}
+
+	public ArtifactWithLicenses(String artifactId) {
+		this.artifactId = artifactId;
+	}
+
+	public ArtifactWithLicenses(String artifactId, Set<String> licenses) {
+		this.artifactId = artifactId;
+		this.licenses = licenses;
+	}
+
+	public String getArtifactId() {
+		return artifactId;
+	}
+
+	public Set<String> getLicenses() {
+		return licenses;
+	}
+
+	public void addLicense(String license) {
+		licenses.add(license);
+	}
+
+	public void setArtifactId(String artifactId) {
+		this.artifactId = artifactId;
+	}
+
+	public void setLicenses(Set<String> licenses) {
+		this.licenses = licenses;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ArtifactWithLicenses other = (ArtifactWithLicenses) obj;
+		if (artifactId == null) {
+			if (other.artifactId != null)
+				return false;
+		} else if (!artifactId.equals(other.artifactId))
+			return false;
+		return true;
+	}
+
+}

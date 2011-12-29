@@ -15,7 +15,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
-import org.linuxstuff.mojo.licensing.model.ArtifactMissingLicense;
+import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
 import org.linuxstuff.mojo.licensing.model.CoalescedLicense;
 import org.linuxstuff.mojo.licensing.model.LicensingRequirements;
 
@@ -23,9 +23,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
- * Some basic plumbing for licensing mojos. I've borrowed
- * {@code MavenProjectDependenciesConfigurator} from the license plugin since it
- * rocks.
+ * Some basic plumbing for licensing mojos. I've borrowed {@code MavenProjectDependenciesConfigurator} from the license plugin since it rocks.
  * 
  * @see CheckMojo
  */
@@ -34,8 +32,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	/**
 	 * Used to read in the licensing-requirements from the plugin's classpath.
 	 * 
-	 * @plexus.requirement role="org.codehaus.plexus.resource.ResourceManager"
-	 *                     role-hint="default"
+	 * @plexus.requirement role="org.codehaus.plexus.resource.ResourceManager" role-hint="default"
 	 * @component
 	 * @required
 	 * @readonly
@@ -95,15 +92,13 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	/**
 	 * A filter to exclude some scopes.
 	 * 
-	 * @parameter expression="${licensing.excludedScopes}"
-	 *            default-value="system"
+	 * @parameter expression="${licensing.excludedScopes}" default-value="system"
 	 * @since 1.0
 	 */
 	protected String excludedScopes;
 
 	/**
-	 * A filter to include only some scopes, if let empty then all scopes will
-	 * be used (no filter).
+	 * A filter to include only some scopes, if let empty then all scopes will be used (no filter).
 	 * 
 	 * @parameter expression="${licensing.includedScopes}" default-value=""
 	 * @since 1.0
@@ -117,6 +112,20 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 * @since 1.0
 	 */
 	protected String excludedGroups;
+
+	/**
+	 * The name of the the XML file which contains licensing information one artifact.
+	 * 
+	 * @parameter expression="${thirdPartyLicensingFilename}" default-value="third-party-licensing.xml"
+	 */
+	protected String thirdPartyLicensingFilename;
+
+	/**
+	 * The name of the the XML file which contains the aggregated licensing information for artifacts.
+	 * 
+	 * @parameter expression="${aggregatedThirdPartyLicensingFilename}" default-value="aggregated-third-party-licensing.xml"
+	 */
+	protected String aggregatedThirdPartyLicensingFilename;
 
 	/**
 	 * A filter to include only some GroupIds
@@ -158,19 +167,17 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 */
 	protected List<String> licensingRequirementFiles;
 
-	protected LicensingRequirements licensingRequirements;
+	protected LicensingRequirements licensingRequirements = null;
 
 	/**
-	 * Build a list of artifacts that this project depends on, but resolves them
-	 * into {@code MavenProject}s so we can look at their {@code License}
+	 * Build a list of artifacts that this project depends on, but resolves them into {@code MavenProject}s so we can look at their {@code License}
 	 * information. Honours all the include/exclude parameters above.
 	 * 
 	 * @return Does not return null, will return an empty set.
 	 */
 	protected Collection<MavenProject> getProjectDependencies() {
 
-		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(project, this,
-				localRepository, remoteRepositories, null);
+		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(project, this, localRepository, remoteRepositories, null);
 
 		return dependencies.values();
 
@@ -186,7 +193,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		XStream xstream = new XStream(new StaxDriver());
 
 		xstream.processAnnotations(LicensingRequirements.class);
-		xstream.processAnnotations(ArtifactMissingLicense.class);
+		xstream.processAnnotations(ArtifactWithLicenses.class);
 		xstream.processAnnotations(CoalescedLicense.class);
 
 		if (licensingRequirementFiles == null) {
@@ -199,8 +206,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		for (String requirementsFile : licensingRequirementFiles) {
 
 			try {
-				requirements.add((LicensingRequirements) xstream.fromXML(locator
-						.getResourceAsInputStream(requirementsFile)));
+				requirements.add((LicensingRequirements) xstream.fromXML(locator.getResourceAsInputStream(requirementsFile)));
 
 			} catch (Exception e) {
 				throw new MojoExecutionException("Could not read licensing requirements file: " + requirementsFile, e);
@@ -211,8 +217,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	}
 
 	/**
-	 * Plugin does not yet support merging {@code LicensingRequirements}, but
-	 * when it does, this is where it will do it.
+	 * Plugin does not yet support merging {@code LicensingRequirements}, but when it does, this is where it will do it.
 	 */
 	private LicensingRequirements mergeLicenseRequirements(List<LicensingRequirements> requirements) {
 
@@ -224,14 +229,15 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	}
 
 	/**
-	 * As long as the {@code MavenProject} is under at least one liked license,
-	 * then it is liked. This method will also consider licensing specified in
-	 * licensing requirements; but only if the {@code MavenProject} does not
-	 * have its own {@code License} block. If no licensing at all is found then
-	 * it is considered disliked.
+	 * As long as the {@code MavenProject} is under at least one liked license, then it is liked. This method will also consider licensing specified
+	 * in licensing requirements; but only if the {@code MavenProject} does not have its own {@code License} block. If no licensing at all is found
+	 * then it is considered disliked.
 	 */
 	protected boolean isDisliked(MavenProject mavenProject) {
 
+		if (licensingRequirements == null) {
+			return false;
+		}
 		if (licensingRequirements.isExemptFromDislike(mavenProject.getId())) {
 			return false;
 		}
@@ -252,15 +258,13 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	}
 
 	protected Set<String> collectLicensesForMavenProject(MavenProject mavenProject) {
-		Set<String> licenses;
+		Set<String> licenses = new HashSet<String>();
 
 		/**
-		 * If an artifact declares a license, we will use it <b>instead</b> of
-		 * anything defined in licensing requirements.
+		 * If an artifact declares a license, we will use it <b>instead</b> of anything defined in licensing requirements.
 		 */
 		if (mavenProject.getLicenses() != null && mavenProject.getLicenses().size() > 0) {
 			getLog().debug("Licensing: " + mavenProject.getId() + " has licensing information in it.");
-			licenses = new HashSet<String>();
 
 			List<License> embeddedLicenses = (List<License>) mavenProject.getLicenses();
 			for (License license : embeddedLicenses) {
@@ -270,7 +274,10 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 			}
 
 		} else {
-			licenses = licensingRequirements.getLicenseNames(mavenProject.getId());
+			Set<String> hardcodedLicenses = licensingRequirements.getLicenseNames(mavenProject.getId());
+			for (String license : hardcodedLicenses) {
+				licenses.add(licensingRequirements.getCorrectLicenseName(license));
+			}
 		}
 
 		return licenses;

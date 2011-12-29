@@ -10,27 +10,20 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 public class LicensingRequirements {
 
 	@XStreamAlias("missing-licenses")
-	private Set<ArtifactMissingLicense> missingLicenses;
+	private Set<ArtifactWithLicenses> missingLicenses = new HashSet<ArtifactWithLicenses>();
 
 	@XStreamAlias("coalesced-licenses")
-	private Set<CoalescedLicense> coalescedLicenses;
+	private Set<CoalescedLicense> coalescedLicenses = new HashSet<CoalescedLicense>();
 
 	@XStreamAlias("disliked-licenses")
 	@XStreamImplicit(itemFieldName = "disliked-license")
-	private Set<String> dislikedLicenses;
+	private Set<String> dislikedLicenses = new HashSet<String>();
 
 	@XStreamAlias("dislike-exemptions")
 	@XStreamImplicit(itemFieldName = "dislike-exemption")
-	private Set<String> dislikeExemptions;
+	private Set<String> dislikeExemptions = new HashSet<String>();
 
-	public LicensingRequirements() {
-		missingLicenses = new HashSet<ArtifactMissingLicense>();
-		coalescedLicenses = new HashSet<CoalescedLicense>();
-		dislikedLicenses = new HashSet<String>();
-		dislikeExemptions = new HashSet<String>();
-	}
-
-	public void addArtifactMissingLicense(ArtifactMissingLicense missingLicense) {
+	public void addArtifactMissingLicense(ArtifactWithLicenses missingLicense) {
 		missingLicenses.add(missingLicense);
 	}
 
@@ -64,12 +57,16 @@ public class LicensingRequirements {
 	}
 
 	public boolean isExemptFromDislike(String artifactId) {
+		if (dislikeExemptions == null) {
+			return false;
+		}
+
 		return dislikeExemptions.contains(artifactId);
 	}
 
 	public Set<String> getLicenseNames(String id) {
 		Set<String> licenses = new HashSet<String>();
-		for (ArtifactMissingLicense missing : missingLicenses) {
+		for (ArtifactWithLicenses missing : missingLicenses) {
 			if (missing.getArtifactId().equals(id)) {
 				licenses.addAll(missing.getLicenses());
 			}

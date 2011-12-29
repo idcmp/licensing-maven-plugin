@@ -1,21 +1,21 @@
 package org.linuxstuff.mojo.licensing;
 
+import java.io.File;
 import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
 import org.linuxstuff.mojo.licensing.model.LicensingReport;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
  * @goal collect-reports
  * @requiresProject true
  * @aggregator
- * 
  */
 public class CollectReportsMojo extends AbstractLicensingMojo {
 
@@ -37,28 +37,26 @@ public class CollectReportsMojo extends AbstractLicensingMojo {
 		readLicensingRequirements();
 
 		report = new LicensingReport();
-		try {
-			report.initialize();
-		} catch (ParserConfigurationException e) {
-			throw new MojoExecutionException("Failed to initialize LicensingReport", e);
-		}
 
-		Document doc = report.getDocument();
-		Element root = doc.createElement("licensing");
-		Element artifacts = doc.createElement("artifacts");
-		Element missing = doc.createElement("license-missing");
-		Element disliked = doc.createElement("license-disliked");
-
-		doc.appendChild(root);
-
-		root.appendChild(artifacts);
-		root.appendChild(missing);
-		root.appendChild(disliked);
+		XStream xstream = new XStream(new StaxDriver());
+		xstream.processAnnotations(ArtifactWithLicenses.class);
+		xstream.processAnnotations(LicensingReport.class);
 
 		for (MavenProject p : reactorProjects) {
-			getLog().info("reactor has: " + p + " whose output dir is: " + p.getBuild().getDirectory());
+
+			File licenseXml = new File(p.getBuild().getDirectory(), thirdPartyLicensingFilename);
+
+			if (licenseXml.canRead()) {
+				LicensingReport artifactReport = (LicensingReport) xstream.fromXML(licenseXml);
+				getLog().debug("Successfully turned " + licenseXml + " into " + artifactReport);
+				report.combineWith(artifactReport);
+			} else {
+				getLog().debug("No report file found at: " + licenseXml.getAbsolutePath());
+			}
 		}
 
+		File outputFile = new File(project.getBuild().getDirectory(), aggregatedThirdPartyLicensingFilename);
+		report.writeReport(outputFile);
 	}
 
 }

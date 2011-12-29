@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
 import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
 import org.linuxstuff.mojo.licensing.model.LicensingReport;
 
@@ -18,6 +19,14 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
  * @aggregator
  */
 public class CollectReportsMojo extends AbstractLicensingMojo {
+
+	/**
+	 * Maven ProjectHelper.
+	 * 
+	 * @component
+	 * @readonly
+	 */
+	private MavenProjectHelper projectHelper;
 
 	/**
 	 * The projects in the reactor for aggregation report.
@@ -57,6 +66,9 @@ public class CollectReportsMojo extends AbstractLicensingMojo {
 
 		File outputFile = new File(project.getBuild().getDirectory(), aggregatedThirdPartyLicensingFilename);
 		report.writeReport(outputFile);
+
+		projectHelper.attachArtifact(project, outputFile, "aggregated-third-party-licensing");
+
 	}
 
 }

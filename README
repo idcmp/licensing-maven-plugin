@@ -38,6 +38,7 @@ DONE Looks for third-party-licensing-summary.xml files in target/
 DONE Generates an aggregated-third-party-licensing-summary.xml report in target/site
 It should attach that summary to the reactor.
 I guess it could be configured to fail on missing/disliked but I'm not sure that's needed.
+
 There's a license-report project.  It's what Nancy has.  It:
 
 Lists the aggregate-license-summary of the different reactor builds as dependencies.

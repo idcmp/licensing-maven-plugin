@@ -1,5 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<groupId>org.linuxstuff.maven</groupId>
 	<artifactId>licensing-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
@@ -8,6 +15,7 @@
 	<url>http://github.com/idcmp/licensing-maven-plugin</url>
 
 	<inceptionYear>2011</inceptionYear>
+
 	<licenses>
 		<license>
 			<name>The GNU Lesser General Public License, Version 3.0</name>
@@ -15,6 +23,20 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+
+	<scm>
+		<url>https://github.com/idcmp/licensing-maven-plugin</url>
+		<connection>scm:git:git@github.com:idcmp/licensing-maven-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com:idcmp/licensing-maven-plugin.git</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>idcmp</id>
+			<name>JAmes Atwill</name>
+			<email>jatwill+licensingmavenplugin@linuxstuff.org</email>
+		</developer>
+	</developers>
 
 	<properties>
 		<mavenVersion>2.0.6</mavenVersion>

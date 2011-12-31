@@ -28,6 +28,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
  * rocks.
  * 
  * @see CheckMojo
+ * @see CollectReportsMojo
  */
 abstract public class AbstractLicensingMojo extends AbstractMojo implements MavenProjectDependenciesConfigurator {
 
@@ -176,7 +177,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 */
 	protected List<String> licensingRequirementFiles;
 
-	protected LicensingRequirements licensingRequirements = null;
+	protected LicensingRequirements licensingRequirements = new LicensingRequirements();
 
 	/**
 	 * Build a list of artifacts that this project depends on, but resolves them
@@ -187,19 +188,19 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 */
 	protected Collection<MavenProject> getProjectDependencies() {
 
-		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(project, this,
-				localRepository, remoteRepositories, null);
+		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(project, this, localRepository, remoteRepositories, null);
 
 		return dependencies.values();
 
 	}
 
+	/**
+	 * Swallow an XML file with licensing requirements. See the
+	 * {@code LicensingRequirements} model for more details.
+	 * 
+	 * @throws MojoExecutionException wrapping original exceptions
+	 */
 	protected void readLicensingRequirements() throws MojoExecutionException {
-
-		if (licensingRequirements != null) {
-			getLog().debug("Licensing requirements files have already been read.  Not re-reading.");
-			return;
-		}
 
 		XStream xstream = new XStream(new StaxDriver());
 
@@ -217,8 +218,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		for (String requirementsFile : licensingRequirementFiles) {
 
 			try {
-				requirements.add((LicensingRequirements) xstream.fromXML(locator
-						.getResourceAsInputStream(requirementsFile)));
+				requirements.add((LicensingRequirements) xstream.fromXML(locator.getResourceAsInputStream(requirementsFile)));
 
 			} catch (Exception e) {
 				throw new MojoExecutionException("Could not read licensing requirements file: " + requirementsFile, e);
@@ -250,9 +250,10 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 */
 	protected boolean isDisliked(MavenProject mavenProject) {
 
-		if (licensingRequirements == null) {
+		if (!licensingRequirements.containsDislikedLicenses()) {
 			return false;
 		}
+
 		if (licensingRequirements.isExemptFromDislike(mavenProject.getId())) {
 			return false;
 		}
@@ -285,20 +286,14 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 			List<License> embeddedLicenses = (List<License>) mavenProject.getLicenses();
 			for (License license : embeddedLicenses) {
 				if (license.getName() != null) {
-					if (licensingRequirements != null) {
-						licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
-					} else {
-						licenses.add(license.getName());
-					}
+					licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
 				}
 			}
 
 		} else {
-			if (licensingRequirements != null) {
-				Set<String> hardcodedLicenses = licensingRequirements.getLicenseNames(mavenProject.getId());
-				for (String license : hardcodedLicenses) {
-					licenses.add(licensingRequirements.getCorrectLicenseName(license));
-				}
+			Set<String> hardcodedLicenses = licensingRequirements.getLicenseNames(mavenProject.getId());
+			for (String license : hardcodedLicenses) {
+				licenses.add(licensingRequirements.getCorrectLicenseName(license));
 			}
 		}
 

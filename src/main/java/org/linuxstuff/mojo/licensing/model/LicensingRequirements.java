@@ -45,10 +45,10 @@ public class LicensingRequirements {
 
 	public String getCorrectLicenseName(String name) {
 		for (CoalescedLicense coalesced : coalescedLicenses) {
-			if (coalesced.getFinalName().equals(name))
+			if (coalesced.getFinalName().equalsIgnoreCase(name.trim()))
 				return name;
 			for (String otherName : coalesced.getOtherNames()) {
-				if (otherName.equalsIgnoreCase(name))
+				if (otherName.equalsIgnoreCase(name.trim()))
 					return coalesced.getFinalName();
 			}
 		}
@@ -73,5 +73,9 @@ public class LicensingRequirements {
 		}
 
 		return licenses;
+	}
+
+	public boolean containsDislikedLicenses() {
+		return !dislikedLicenses.isEmpty();
 	}
 }

@@ -16,8 +16,10 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
- * Determine licensing information of all dependencies. This is generally obtained by dependencies providing a license block in their POM. However
- * this plugin supports a requirements file which can supplement licensing information for artifacts missing licensing information.
+ * Determine licensing information of all dependencies. This is generally
+ * obtained by dependencies providing a license block in their POM. However this
+ * plugin supports a requirements file which can supplement licensing
+ * information for artifacts missing licensing information.
  * 
  * @goal check
  * @phase verify
@@ -46,7 +48,8 @@ public class CheckMojo extends AbstractLicensingMojo {
 	private LicensingReport report;
 
 	/**
-	 * Fail the build if any dependencies are either under disliked licenses or are missing licensing information.
+	 * Fail the build if any dependencies are either under disliked licenses or
+	 * are missing licensing information.
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -86,18 +89,22 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 		report.writeReport(file);
 
+		checkForFailure();
+
+	}
+
+	protected void checkForFailure() throws MojoFailureException {
 		long disliked = report.getDislikedArtifacts().size();
 		long missing = report.getLicenseMissing().size();
 
 		if (disliked > 0 && missing > 0 && failIfDisliked && failIfMissing) {
-			throw new MojoFailureException("This project has " + disliked + " disliked artifact" + ((disliked == 1) ? "" : "s") + " and " + missing
-					+ " artifact" + ((missing == 1) ? "" : "s") + " missing licensing information.");
-		} else if (missing > 0 && failIfMissing) {
-			throw new MojoFailureException("This project has " + missing + " artifact" + ((missing == 1) ? "" : "s")
+			throw new MojoFailureException("This project has " + disliked + " disliked artifact" + ((disliked == 1) ? "" : "s") + " and " + missing + " artifact" + ((missing == 1) ? "" : "s")
 					+ " missing licensing information.");
+		} else if (missing > 0 && failIfMissing) {
+			throw new MojoFailureException("This project has " + missing + " artifact" + ((missing == 1) ? "" : "s") + " missing licensing information.");
 		} else if (disliked > 0 && failIfDisliked) {
 			throw new MojoFailureException("This project has " + disliked + " disliked artifact" + ((disliked == 1) ? "" : "s") + ".");
 		}
-	}
 
+	}
 }

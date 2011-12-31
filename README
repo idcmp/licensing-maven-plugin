@@ -1,17 +1,17 @@
-Your situation is that you work at a company and you'd like to keep an eye on which projects depend on which dependencies.  You *could* do it in a repository manager or some such, but the truth is, some projects you have may have different needs.
+Getting Started:
 
-This licensing plugin works off zero or more *licensing-requirements.xml* files (named as you like) found in its classpath (which means you can include it as a dependency).
 
-When you run *licensing:check*, it ensures that:
+$ mvn org.linuxstuff.maven:licensing-maven-plugin:check -DfailIfMissing=false
 
-# all your dependencies have licenses.
-# all your dependencies are licensed in at least one liked license.
+This will walk through your multimodule project and create
+target/third-party-licensing.xml everywhere.
 
-Often, something goes wrong so the *licensing-requirements.xml* comes in handy.
+$ mvn org.linuxstuff.maven:licensing-maven-plugin:collect-reports
 
-In that file you can specify the license for artifacts (GAV) which are missing licenses.  You also list which licenses you dislike (we blacklist).
+This will walk through your multimodule project, finding all those
+third-party-licensing.xml files and aggregate them together into a
+target/aggregated-third-party-licensing.xml.
 
-Two other things go in that file.  First, you can coalesce license names and you can mark certain artifacts as being exempt from being disliked.
 
 ---
 TODO Here's a rough draft.
@@ -39,7 +39,7 @@ DONE Generates an aggregated-third-party-licensing-summary.xml report in target/
 It should attach that summary to the reactor.
 I guess it could be configured to fail on missing/disliked but I'm not sure that's needed.
 
-There's a license-report project.  It's what Nancy has.  It:
+There's a license-report project.  It:
 
 Lists the aggregate-license-summary of the different reactor builds as dependencies.
 Fetches those and puts them in a target/foo/ directory.

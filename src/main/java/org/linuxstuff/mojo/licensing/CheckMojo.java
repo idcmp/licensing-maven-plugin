@@ -1,8 +1,6 @@
 package org.linuxstuff.mojo.licensing;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
@@ -11,9 +9,6 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
 import org.linuxstuff.mojo.licensing.model.LicensingReport;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
  * Determine licensing information of all dependencies. This is generally
@@ -52,6 +47,11 @@ public class CheckMojo extends AbstractLicensingMojo {
 	 * are missing licensing information.
 	 */
 	public void execute() throws MojoExecutionException, MojoFailureException {
+
+		if (skip) {
+			getLog().debug("licensing.skip=true, not doing anything.");
+			return;
+		}
 
 		readLicensingRequirements();
 

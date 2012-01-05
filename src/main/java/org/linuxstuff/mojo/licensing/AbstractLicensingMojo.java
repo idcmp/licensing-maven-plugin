@@ -170,6 +170,13 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	protected boolean includeTransitiveDependencies;
 
 	/**
+	 * Should we skip doing licensing checks?
+	 * 
+	 * @parameter expression="${licensing.skip}" default-value="false"
+	 */
+	protected boolean skip;
+
+	/**
 	 * Location of license requirement XML files.
 	 * 
 	 * @parameter

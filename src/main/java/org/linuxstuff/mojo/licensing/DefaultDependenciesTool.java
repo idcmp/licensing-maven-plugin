@@ -64,8 +64,7 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 	/**
 	 * {@inheritDoc}
 	 */
-	public SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project,
-			MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
+	public SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project, MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
 			List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache) {
 
 		boolean haveNoIncludedGroups = StringUtils.isEmpty(configuration.getIncludedGroups());
@@ -134,12 +133,10 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 			// Check if the project should be included
 			// If there is no specified artifacts and group to include, include
 			// all
-			boolean isToInclude = haveNoIncludedArtifacts && haveNoIncludedGroups
-					|| isIncludable(artifact, includedGroupPattern, includedArtifactPattern);
+			boolean isToInclude = haveNoIncludedArtifacts && haveNoIncludedGroups || isIncludable(artifact, includedGroupPattern, includedArtifactPattern);
 
 			// Check if the project should be excluded
-			boolean isToExclude = isToInclude && haveExclusions
-					&& isExcludable(artifact, excludedGroupPattern, excludedArtifactPattern);
+			boolean isToExclude = isToInclude && haveExclusions && isExcludable(artifact, excludedGroupPattern, excludedArtifactPattern);
 
 			if (!isToInclude || isToExclude) {
 				log.debug("skip artifact " + id);
@@ -161,8 +158,7 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 				// build project
 
 				try {
-					depMavenProject = mavenProjectBuilder.buildFromRepository(artifact, remoteRepositories,
-							localRepository, true);
+					depMavenProject = mavenProjectBuilder.buildFromRepository(artifact, remoteRepositories, localRepository, true);
 				} catch (ProjectBuildingException e) {
 					log.warn("Unable to obtain POM for artifact : " + artifact, e);
 					continue;

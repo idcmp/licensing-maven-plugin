@@ -58,7 +58,6 @@ public interface DependenciesTool {
 	 * @return the map of resolved dependencies indexed by their unique id.
 	 * @see MavenProjectDependenciesConfigurator
 	 */
-	SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project,
-			MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
+	SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project, MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
 			List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache);
 }

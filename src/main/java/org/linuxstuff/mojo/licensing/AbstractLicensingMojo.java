@@ -198,7 +198,8 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 * Swallow an XML file with licensing requirements. See the
 	 * {@code LicensingRequirements} model for more details.
 	 * 
-	 * @throws MojoExecutionException wrapping original exceptions
+	 * @throws MojoExecutionException
+	 *             wrapping original exceptions
 	 */
 	protected void readLicensingRequirements() throws MojoExecutionException {
 
@@ -229,15 +230,19 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	}
 
 	/**
-	 * Plugin does not yet support merging {@code LicensingRequirements}, but
-	 * when it does, this is where it will do it.
+	 * Combine the separate {@code LicensingRequirements} models into one.
+	 * <b>WARNING</b> The {@code CoalescedLicense} merging does not do anything
+	 * special.
 	 */
 	private LicensingRequirements mergeLicenseRequirements(List<LicensingRequirements> requirements) {
 
-		if (!requirements.isEmpty()) {
-			return requirements.get(0);
+		LicensingRequirements merged = new LicensingRequirements();
+
+		for (LicensingRequirements req : requirements) {
+			merged.combineWith(req);
 		}
-		return new LicensingRequirements();
+
+		return merged;
 
 	}
 

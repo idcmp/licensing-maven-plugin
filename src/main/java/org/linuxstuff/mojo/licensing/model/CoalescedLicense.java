@@ -29,4 +29,38 @@ public class CoalescedLicense {
 		return otherNames;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((finalName == null) ? 0 : finalName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CoalescedLicense other = (CoalescedLicense) obj;
+		if (finalName == null) {
+			if (other.finalName != null)
+				return false;
+		} else if (!finalName.equals(other.finalName))
+			return false;
+		return true;
+	}
+
+	/**
+	 * This method does not attempt to do anything creative with cascading final
+	 * names or anything. It simply combines the "other names" of the other
+	 * {@code CoalescedLicense}.
+	 */
+	public void combineWith(CoalescedLicense other) {
+		otherNames.addAll(other.getOtherNames());
+	}
+
 }

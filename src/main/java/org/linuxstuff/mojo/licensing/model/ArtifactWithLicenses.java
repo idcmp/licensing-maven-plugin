@@ -20,6 +20,10 @@ public class ArtifactWithLicenses {
 	public ArtifactWithLicenses() {
 		licenses = new HashSet<String>();
 	}
+	
+	public void combineWith(ArtifactWithLicenses other) {
+		licenses.addAll(other.getLicenses());
+	}
 
 	public ArtifactWithLicenses(String artifactId) {
 		this.artifactId = artifactId;

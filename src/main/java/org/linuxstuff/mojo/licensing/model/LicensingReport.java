@@ -78,6 +78,10 @@ public class LicensingReport {
 		return dislikedArtifacts;
 	}
 
+	/**
+	 * Merges the passed in {@code LicensingReport} into this one, making this
+	 * one a combination of the two.
+	 */
 	public void combineWith(LicensingReport artifactReport) {
 		for (ArtifactWithLicenses artifact : artifactReport.getDislikedArtifacts()) {
 			addDislikedArtifact(artifact);

@@ -78,4 +78,65 @@ public class LicensingRequirements {
 	public boolean containsDislikedLicenses() {
 		return !dislikedLicenses.isEmpty();
 	}
+
+	public Set<ArtifactWithLicenses> getMissingLicenses() {
+		return missingLicenses;
+	}
+
+	public Set<CoalescedLicense> getCoalescedLicenses() {
+		return coalescedLicenses;
+	}
+
+	public Set<String> getDislikedLicenses() {
+		return dislikedLicenses;
+	}
+
+	public Set<String> getDislikeExemptions() {
+		return dislikeExemptions;
+	}
+
+	public void combineWith(LicensingRequirements req) {
+
+		if (req.getDislikedLicenses() != null) {
+			for (String source : req.getDislikedLicenses()) {
+				addDislikedLicense(source);
+			}
+		}
+
+		if (req.getDislikeExemptions() != null) {
+			for (String source : req.getDislikeExemptions()) {
+				addDislikeExemption(source);
+			}
+		}
+
+		if (req.getMissingLicenses() != null) {
+			for (ArtifactWithLicenses source : req.getMissingLicenses()) {
+				if (getMissingLicenses().contains(source)) {
+					for (ArtifactWithLicenses destination : getMissingLicenses()) {
+						if (source.equals(destination)) {
+							destination.combineWith(source);
+						}
+					}
+				} else {
+					addArtifactMissingLicense(source);
+				}
+			}
+		}
+
+		if (req.getCoalescedLicenses() != null) {
+
+			for (CoalescedLicense source : req.getCoalescedLicenses()) {
+				if (getCoalescedLicenses().contains(source)) {
+					for (CoalescedLicense destination : getCoalescedLicenses()) {
+						if (source.equals(destination)) {
+							destination.combineWith(source);
+						}
+					}
+				} else {
+					addCoalescedLicense(source);
+				}
+			}
+		}
+	}
+
 }

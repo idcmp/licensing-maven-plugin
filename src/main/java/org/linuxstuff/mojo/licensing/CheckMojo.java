@@ -63,12 +63,13 @@ public class CheckMojo extends AbstractLicensingMojo {
 			ArtifactWithLicenses entry = new ArtifactWithLicenses();
 
 			entry.setArtifactId(mavenProject.getId());
+			entry.setName(mavenProject.getName());
 
 			Set<String> licenses = collectLicensesForMavenProject(mavenProject);
 
 			if (licenses.isEmpty()) {
 				getLog().warn("Licensing: The artifact " + mavenProject.getId() + " has no license specified.");
-				report.addMissingLicense(mavenProject.getId());
+				report.addMissingLicense(entry);
 			} else {
 				for (String license : licenses) {
 					entry.addLicense(license);

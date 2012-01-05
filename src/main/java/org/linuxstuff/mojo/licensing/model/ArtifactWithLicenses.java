@@ -14,15 +14,15 @@ public class ArtifactWithLicenses {
 	@XStreamAlias("id")
 	private String artifactId;
 
+	@XStreamAsAttribute
+	@XStreamAlias("name")
+	private String name;
+
 	@XStreamImplicit(itemFieldName = "license")
 	private Set<String> licenses;
 
 	public ArtifactWithLicenses() {
 		licenses = new HashSet<String>();
-	}
-	
-	public void combineWith(ArtifactWithLicenses other) {
-		licenses.addAll(other.getLicenses());
 	}
 
 	public ArtifactWithLicenses(String artifactId) {
@@ -33,6 +33,10 @@ public class ArtifactWithLicenses {
 	public ArtifactWithLicenses(String artifactId, Set<String> licenses) {
 		this.artifactId = artifactId;
 		this.licenses = licenses;
+	}
+
+	public void combineWith(ArtifactWithLicenses other) {
+		licenses.addAll(other.getLicenses());
 	}
 
 	public String getArtifactId() {
@@ -53,6 +57,14 @@ public class ArtifactWithLicenses {
 
 	public void setLicenses(Set<String> licenses) {
 		this.licenses = licenses;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

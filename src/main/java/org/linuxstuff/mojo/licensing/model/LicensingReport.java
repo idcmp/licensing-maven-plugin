@@ -50,10 +50,6 @@ public class LicensingReport {
 		licensedArtifacts.add(artifact);
 	}
 
-	public void addMissingLicense(String artifactId) {
-		addMissingLicense(new ArtifactWithLicenses(artifactId));
-	}
-
 	public void addMissingLicense(ArtifactWithLicenses artifact) {
 		licenseMissing.add(artifact);
 		missingLicensesCount = licenseMissing.size();

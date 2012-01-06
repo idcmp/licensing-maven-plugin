@@ -153,6 +153,13 @@
 			<version>3.0-alpha-2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.maven.doxia</groupId>
+			<artifactId>doxia-site-renderer</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+
 		<!-- shared -->
 		<dependency>
 			<groupId>org.apache.maven.reporting</groupId>

@@ -1,6 +1,5 @@
 package org.linuxstuff.mojo.licensing;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -63,16 +62,6 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 * @since 1.0
 	 */
 	protected List remoteRepositories;
-
-	/**
-	 * Location of the file.
-	 * 
-	 * @parameter expression="${project.build.directory}"
-	 * @required
-	 * @readOnly
-	 * @since 1.0
-	 */
-	private File outputDirectory;
 
 	/**
 	 * The Maven Project Object.
@@ -296,7 +285,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		if (mavenProject.getLicenses() != null && mavenProject.getLicenses().size() > 0) {
 			getLog().debug("Licensing: " + mavenProject.getId() + " has licensing information in it.");
 
-			List<License> embeddedLicenses = (List<License>) mavenProject.getLicenses();
+			List<License> embeddedLicenses = mavenProject.getLicenses();
 			for (License license : embeddedLicenses) {
 				if (license.getName() != null) {
 					licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
@@ -314,32 +303,39 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 
 	}
 
+	@Override
 	public boolean isIncludeTransitiveDependencies() {
 		return includeTransitiveDependencies;
 	}
 
+	@Override
 	public List<String> getIncludedScopes() {
 		String[] split = includedScopes == null ? new String[0] : includedScopes.split(",");
 		return Arrays.asList(split);
 	}
 
+	@Override
 	public List<String> getExcludedScopes() {
 		String[] split = excludedScopes == null ? new String[0] : excludedScopes.split(",");
 		return Arrays.asList(split);
 	}
 
+	@Override
 	public String getIncludedArtifacts() {
 		return includedArtifacts;
 	}
 
+	@Override
 	public String getIncludedGroups() {
 		return includedGroups;
 	}
 
+	@Override
 	public String getExcludedGroups() {
 		return excludedGroups;
 	}
 
+	@Override
 	public String getExcludedArtifacts() {
 		return excludedArtifacts;
 	}

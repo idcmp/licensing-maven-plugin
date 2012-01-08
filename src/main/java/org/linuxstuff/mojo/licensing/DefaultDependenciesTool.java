@@ -63,6 +63,7 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project, MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
 			List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache) {
 

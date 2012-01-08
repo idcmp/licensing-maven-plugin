@@ -8,7 +8,7 @@ import org.linuxstuff.mojo.licensing.model.LicensingReport;
 public class CheckForFailureTest {
 
 	/**
-	 * Ignore our problems.
+	 * Ignore all our problems.
 	 */
 	@Test
 	public void testIgnoreEverything() throws MojoFailureException {
@@ -62,6 +62,10 @@ public class CheckForFailureTest {
 
 	}
 
+	/**
+	 * Don't blow up about the disliked artifact (but enable blowing up for
+	 * artifacts missing licenses).
+	 */
 	@Test
 	public void testIgnoreDisliked() throws MojoFailureException {
 
@@ -77,6 +81,10 @@ public class CheckForFailureTest {
 		mojo.checkForFailure(report);
 	}
 
+	/**
+	 * Don't blow up about artifacts missing licenses (but enable blowing up for
+	 * disliked licenses).
+	 */
 	@Test
 	public void testIgnoreMissing() throws MojoFailureException {
 
@@ -93,7 +101,8 @@ public class CheckForFailureTest {
 	}
 
 	/**
-	 * Ignore our problems.
+	 * Also blow up if *everything* is bad. Technically the user sees a
+	 * different message, but I'm not about to scrape an exception message.
 	 */
 	@Test(expected = MojoFailureException.class)
 	public void testEverythingIsBad() throws MojoFailureException {

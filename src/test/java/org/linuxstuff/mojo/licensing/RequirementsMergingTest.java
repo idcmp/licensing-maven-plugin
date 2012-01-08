@@ -1,8 +1,6 @@
 package org.linuxstuff.mojo.licensing;
 
-import static org.junit.Assert.*;
-
-import java.util.HashSet;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;

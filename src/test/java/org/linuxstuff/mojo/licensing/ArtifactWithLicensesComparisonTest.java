@@ -1,8 +1,7 @@
 package org.linuxstuff.mojo.licensing;
 
-import static org.junit.Assert.*;
-
-import java.util.Set;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
@@ -19,7 +18,6 @@ public class ArtifactWithLicensesComparisonTest {
 		ArtifactWithLicenses awl2 = new ArtifactWithLicenses("artifactB");
 
 		ArtifactWithLicenses awl3 = new ArtifactWithLicenses("artifactA");
-		ArtifactWithLicenses awl4 = new ArtifactWithLicenses("artifactB");
 
 		assertFalse("ArtifactWithLicenses are compared only on artifactId.", awl1.equals(awl2));
 		assertTrue("ArtifactWithLicenses are compared only on artifactId.", awl1.equals(awl3));

@@ -44,6 +44,7 @@ public class CheckMojo extends AbstractLicensingMojo {
 	 * Fail the build if any dependencies are either under disliked licenses or
 	 * are missing licensing information.
 	 */
+	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
 		if (skip) {

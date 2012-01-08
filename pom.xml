@@ -43,8 +43,6 @@
 
 	<properties>
 		<mavenVersion>3.0.3</mavenVersion>
-		<doxiaVersion>1.2</doxiaVersion>
-		<sitePluginVersion>3.0</sitePluginVersion>
 	</properties>
 
 	<profiles>
@@ -125,12 +123,6 @@
 	<dependencies>
 
 		<dependency>
-			<groupId>stax</groupId>
-			<artifactId>stax-api</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
@@ -153,82 +145,17 @@
 			<artifactId>maven-plugin-api</artifactId>
 			<version>${mavenVersion}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-project</artifactId>
 			<version>3.0-alpha-2</version>
 		</dependency>
 
-		<!-- shared -->
-		<dependency>
-			<groupId>org.apache.maven.reporting</groupId>
-			<artifactId>maven-reporting-api</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.reporting</groupId>
-			<artifactId>maven-reporting-impl</artifactId>
-			<version>2.1</version>
-		</dependency>
-
-		<!-- doxia -->
-		<dependency>
-			<groupId>org.apache.maven.doxia</groupId>
-			<artifactId>doxia-sink-api</artifactId>
-			<version>${doxiaVersion}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.doxia</groupId>
-			<artifactId>doxia-decoration-model</artifactId>
-			<version>${doxiaVersion}</version>
-		</dependency>
-
-		<!-- shared -->
-		<dependency>
-			<groupId>org.apache.maven.shared</groupId>
-			<artifactId>maven-doxia-tools</artifactId>
-			<version>1.4</version>
-		</dependency>
-
-		<!-- plexus -->
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-container-default</artifactId>
-			<version>1.5.5</version>
-		</dependency>
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-resources</artifactId>
 			<version>1.0-alpha-7</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-utils</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-interpolation</artifactId>
-			<version>1.14</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-velocity</artifactId>
-			<version>1.1.8</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.codehaus.plexus</groupId>
-					<artifactId>plexus-default</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.codehaus.plexus</groupId>
-					<artifactId>plexus-component-api</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>velocity</groupId>
-					<artifactId>velocity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -236,5 +163,6 @@
 			<artifactId>xstream</artifactId>
 			<version>1.4.2</version>
 		</dependency>
+
 	</dependencies>
 </project>

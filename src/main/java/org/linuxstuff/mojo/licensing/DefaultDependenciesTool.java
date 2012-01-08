@@ -111,7 +111,7 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 			Artifact artifact = (Artifact) o;
 
 			String scope = artifact.getScope();
-			if (CollectionUtils.isNotEmpty(includedScopes) && !includedScopes.contains(scope)) {
+			if (!includedScopes.isEmpty() && !includedScopes.contains(scope)) {
 
 				// not in included scopes
 				continue;

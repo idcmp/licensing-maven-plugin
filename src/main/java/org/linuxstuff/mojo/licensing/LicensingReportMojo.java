@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 /**
  * @goal licensing-report
  * @phase site
+ * @aggregator
  */
 public class LicensingReportMojo extends AbstractMavenReport {
 
@@ -79,6 +80,16 @@ public class LicensingReportMojo extends AbstractMavenReport {
 	 * @readonly
 	 */
 	private Renderer siteRenderer;
+	
+	/**
+	 * A {@code DependenciesTool} as borrowed from the licensing-maven-plugin.
+	 * 
+	 * @component
+	 * @readonly
+	 * @since 1.0
+	 */
+	private DependenciesTool dependenciesTool;
+
 
 	@Override
 	public String getDescription(Locale locale) {

@@ -55,9 +55,21 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 		readLicensingRequirements();
 
-		report = new LicensingReport();
+		report = generateReport(project);
 
-		Collection<MavenProject> projects = getProjectDependencies();
+		File file = new File(project.getBuild().getDirectory(), thirdPartyLicensingFilename);
+
+		report.writeReport(file);
+
+		checkForFailure();
+
+	}
+
+	protected LicensingReport generateReport(MavenProject project) {
+
+		LicensingReport aReport = new LicensingReport();
+
+		Collection<MavenProject> projects = getProjectDependencies(project);
 		for (MavenProject mavenProject : projects) {
 
 			ArtifactWithLicenses entry = new ArtifactWithLicenses();
@@ -69,7 +81,7 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 			if (licenses.isEmpty()) {
 				getLog().warn("Licensing: The artifact " + mavenProject.getId() + " has no license specified.");
-				report.addMissingLicense(entry);
+				aReport.addMissingLicense(entry);
 			} else {
 				for (String license : licenses) {
 					entry.addLicense(license);
@@ -77,21 +89,16 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 				if (isDisliked(mavenProject)) {
 					getLog().warn("Licensing: The artifact " + mavenProject.getId() + " is only under a disliked license.");
-					report.addDislikedArtifact(entry);
+					aReport.addDislikedArtifact(entry);
 				} else {
-					report.addLicensedArtifact(entry);
+					aReport.addLicensedArtifact(entry);
 				}
 
 			}
 
 		}
 
-		File file = new File(project.getBuild().getDirectory(), thirdPartyLicensingFilename);
-
-		report.writeReport(file);
-
-		checkForFailure();
-
+		return aReport;
 	}
 
 	protected void checkForFailure() throws MojoFailureException {

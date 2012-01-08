@@ -85,13 +85,13 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	protected MavenProject project;
 
 	/**
-	 * A {@code DependenciesTool} as borrowed from the licensing-maven-plugin.
+	 * A {@code DependenciesTool} as borrowed from the license-maven-plugin.
 	 * 
 	 * @component
 	 * @readonly
 	 * @since 1.0
 	 */
-	private DependenciesTool dependenciesTool;
+	protected DependenciesTool dependenciesTool;
 
 	/**
 	 * A filter to exclude some scopes.
@@ -193,10 +193,11 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 * 
 	 * @return Does not return null, will return an empty set.
 	 */
-	protected Collection<MavenProject> getProjectDependencies() {
+	protected Collection<MavenProject> getProjectDependencies(MavenProject aProject) {
 
-		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(project, this, localRepository, remoteRepositories, null);
-
+		getLog().debug("Getting dependencies for project: " + aProject.getId());
+		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(aProject, this, localRepository, remoteRepositories, null);
+		getLog().debug("Dependencies found for project: " + dependencies.values().size());
 		return dependencies.values();
 
 	}

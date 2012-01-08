@@ -10,7 +10,7 @@
 	<groupId>org.linuxstuff.maven</groupId>
 	<artifactId>licensing-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>1.5</version>
+	<version>1.6-SNAPSHOT</version>
 	<name>Licensing Maven Mojo</name>
 	<url>http://github.com/idcmp/licensing-maven-plugin</url>
 

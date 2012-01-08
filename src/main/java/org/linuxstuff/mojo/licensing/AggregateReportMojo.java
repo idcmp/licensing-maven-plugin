@@ -11,6 +11,10 @@ import org.apache.maven.project.MavenProjectHelper;
 import org.linuxstuff.mojo.licensing.model.LicensingReport;
 
 /**
+ * Aggregate mojo. Will walk your reactor building in memory licensing reports
+ * making them into one giant report. This mojo <b>does not</b> check for
+ * missing or disliked artifacts (use {@code CheckMojo} for that).
+ * 
  * @goal aggregate
  * @requiresDependencyResolution test
  * @requiresProject true

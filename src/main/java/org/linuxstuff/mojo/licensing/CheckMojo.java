@@ -40,8 +40,6 @@ public class CheckMojo extends AbstractLicensingMojo {
 	 */
 	protected boolean failIfDisliked;
 
-	private LicensingReport report;
-
 	/**
 	 * Fail the build if any dependencies are either under disliked licenses or
 	 * are missing licensing information.
@@ -55,13 +53,13 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 		readLicensingRequirements();
 
-		report = generateReport(project);
+		LicensingReport report = generateReport(project);
 
 		File file = new File(project.getBuild().getDirectory(), thirdPartyLicensingFilename);
 
 		report.writeReport(file);
 
-		checkForFailure();
+		checkForFailure(report);
 
 	}
 
@@ -101,7 +99,7 @@ public class CheckMojo extends AbstractLicensingMojo {
 		return aReport;
 	}
 
-	protected void checkForFailure() throws MojoFailureException {
+	protected void checkForFailure(LicensingReport report) throws MojoFailureException {
 		long disliked = report.getDislikedArtifacts().size();
 		long missing = report.getLicenseMissing().size();
 

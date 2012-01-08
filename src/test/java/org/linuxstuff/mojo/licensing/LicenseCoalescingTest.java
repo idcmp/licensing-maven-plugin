@@ -83,4 +83,21 @@ public class LicenseCoalescingTest extends AbstractLicensingTest {
 
 	}
 
+	/**
+	 * Ensure {@code CoalescedLicense} are compared solely based on their
+	 * finalname.
+	 */
+	@Test
+	public void testComparingCoalescedLicenses() {
+
+		Set<String> aka = new HashSet<String>();
+		aka.add("hello");
+		aka.add("goodbye");
+
+		CoalescedLicense coalescedLicense2 = new CoalescedLicense("Final Name v1.0", aka);
+
+		assertEquals(coalescedLicense, coalescedLicense2);
+
+	}
+
 }

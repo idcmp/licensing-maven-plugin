@@ -2,7 +2,6 @@ package org.linuxstuff.mojo.licensing;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -18,7 +17,7 @@ import org.linuxstuff.mojo.licensing.model.LicensingReport;
  * @goal aggregate
  * @requiresDependencyResolution test
  * @requiresProject true
- * @aggregator true
+ * @aggregator
  */
 public class AggregateReportMojo extends CheckMojo {
 
@@ -41,6 +40,11 @@ public class AggregateReportMojo extends CheckMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+
+		if (!project.isExecutionRoot()) {
+			getLog().debug(project.getId() + " is not execution root, not making aggregated licensing report.");
+			return;
+		}
 
 		readLicensingRequirements();
 

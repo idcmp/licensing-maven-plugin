@@ -11,6 +11,10 @@ import org.apache.maven.project.MavenProject;
 import org.junit.Test;
 import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
 
+/**
+ * Don't worry test, we like you.
+ * 
+ */
 public class DislikedTest extends AbstractLicensingTest {
 
 	/**

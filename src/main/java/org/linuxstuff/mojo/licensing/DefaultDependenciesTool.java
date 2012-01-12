@@ -32,7 +32,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -45,7 +44,7 @@ import org.codehaus.plexus.logging.Logger;
 /**
  * Default implementation of the {@link DependenciesTool}.
  * 
- * @author tchemit <chemit@codelutin.com>
+ * @author tchemit <chemit@codelutin.com> (originally)
  * @plexus.component role="org.linuxstuff.mojo.licensing.DependenciesTool"
  *                   role-hint="default"
  * @since 1.0
@@ -64,6 +63,7 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project, MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
 			List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache) {
 
@@ -111,7 +111,7 @@ public class DefaultDependenciesTool extends AbstractLogEnabled implements Depen
 			Artifact artifact = (Artifact) o;
 
 			String scope = artifact.getScope();
-			if (CollectionUtils.isNotEmpty(includedScopes) && !includedScopes.contains(scope)) {
+			if (!includedScopes.isEmpty() && !includedScopes.contains(scope)) {
 
 				// not in included scopes
 				continue;

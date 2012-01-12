@@ -34,7 +34,6 @@ public class CollectReportsMojo extends AbstractLicensingMojo {
 	 * @parameter expression="${reactorProjects}"
 	 * @readonly
 	 * @required
-	 * @since 2.8
 	 */
 	private List<MavenProject> reactorProjects;
 

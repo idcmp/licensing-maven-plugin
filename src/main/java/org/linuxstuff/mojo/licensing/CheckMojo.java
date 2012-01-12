@@ -40,12 +40,11 @@ public class CheckMojo extends AbstractLicensingMojo {
 	 */
 	protected boolean failIfDisliked;
 
-	private LicensingReport report;
-
 	/**
 	 * Fail the build if any dependencies are either under disliked licenses or
 	 * are missing licensing information.
 	 */
+	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
 		if (skip) {
@@ -55,9 +54,21 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 		readLicensingRequirements();
 
-		report = new LicensingReport();
+		LicensingReport report = generateReport(project);
 
-		Collection<MavenProject> projects = getProjectDependencies();
+		File file = new File(project.getBuild().getDirectory(), thirdPartyLicensingFilename);
+
+		report.writeReport(file);
+
+		checkForFailure(report);
+
+	}
+
+	protected LicensingReport generateReport(MavenProject project) {
+
+		LicensingReport aReport = new LicensingReport();
+
+		Collection<MavenProject> projects = getProjectDependencies(project);
 		for (MavenProject mavenProject : projects) {
 
 			ArtifactWithLicenses entry = new ArtifactWithLicenses();
@@ -69,7 +80,7 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 			if (licenses.isEmpty()) {
 				getLog().warn("Licensing: The artifact " + mavenProject.getId() + " has no license specified.");
-				report.addMissingLicense(entry);
+				aReport.addMissingLicense(entry);
 			} else {
 				for (String license : licenses) {
 					entry.addLicense(license);
@@ -77,24 +88,19 @@ public class CheckMojo extends AbstractLicensingMojo {
 
 				if (isDisliked(mavenProject)) {
 					getLog().warn("Licensing: The artifact " + mavenProject.getId() + " is only under a disliked license.");
-					report.addDislikedArtifact(entry);
+					aReport.addDislikedArtifact(entry);
 				} else {
-					report.addLicensedArtifact(entry);
+					aReport.addLicensedArtifact(entry);
 				}
 
 			}
 
 		}
 
-		File file = new File(project.getBuild().getDirectory(), thirdPartyLicensingFilename);
-
-		report.writeReport(file);
-
-		checkForFailure();
-
+		return aReport;
 	}
 
-	protected void checkForFailure() throws MojoFailureException {
+	protected void checkForFailure(LicensingReport report) throws MojoFailureException {
 		long disliked = report.getDislikedArtifacts().size();
 		long missing = report.getLicenseMissing().size();
 

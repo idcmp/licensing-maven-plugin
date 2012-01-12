@@ -20,7 +20,6 @@ public abstract class AbstractLicensingTest {
 
 		@Override
 		public void execute() throws MojoExecutionException, MojoFailureException {
-			// TODO Auto-generated method stub
 
 		}
 

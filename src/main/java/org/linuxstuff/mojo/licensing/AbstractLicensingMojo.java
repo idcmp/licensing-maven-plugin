@@ -1,6 +1,5 @@
 package org.linuxstuff.mojo.licensing;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,16 +64,6 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	protected List remoteRepositories;
 
 	/**
-	 * Location of the file.
-	 * 
-	 * @parameter expression="${project.build.directory}"
-	 * @required
-	 * @readOnly
-	 * @since 1.0
-	 */
-	private File outputDirectory;
-
-	/**
 	 * The Maven Project Object.
 	 * 
 	 * @parameter default-value="${project}"
@@ -85,13 +74,13 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	protected MavenProject project;
 
 	/**
-	 * A {@code DependenciesTool} as borrowed from the licensing-maven-plugin.
+	 * A {@code DependenciesTool} as borrowed from the license-maven-plugin.
 	 * 
 	 * @component
 	 * @readonly
 	 * @since 1.0
 	 */
-	private DependenciesTool dependenciesTool;
+	protected DependenciesTool dependenciesTool;
 
 	/**
 	 * A filter to exclude some scopes.
@@ -193,10 +182,11 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 * 
 	 * @return Does not return null, will return an empty set.
 	 */
-	protected Collection<MavenProject> getProjectDependencies() {
+	protected Collection<MavenProject> getProjectDependencies(MavenProject aProject) {
 
-		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(project, this, localRepository, remoteRepositories, null);
-
+		getLog().debug("Getting dependencies for project: " + aProject.getId());
+		Map<String, MavenProject> dependencies = dependenciesTool.loadProjectDependencies(aProject, this, localRepository, remoteRepositories, null);
+		getLog().debug("Dependencies found for project: " + dependencies.values().size());
 		return dependencies.values();
 
 	}
@@ -295,7 +285,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		if (mavenProject.getLicenses() != null && mavenProject.getLicenses().size() > 0) {
 			getLog().debug("Licensing: " + mavenProject.getId() + " has licensing information in it.");
 
-			List<License> embeddedLicenses = (List<License>) mavenProject.getLicenses();
+			List<License> embeddedLicenses = mavenProject.getLicenses();
 			for (License license : embeddedLicenses) {
 				if (license.getName() != null) {
 					licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
@@ -313,32 +303,39 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 
 	}
 
+	@Override
 	public boolean isIncludeTransitiveDependencies() {
 		return includeTransitiveDependencies;
 	}
 
+	@Override
 	public List<String> getIncludedScopes() {
 		String[] split = includedScopes == null ? new String[0] : includedScopes.split(",");
 		return Arrays.asList(split);
 	}
 
+	@Override
 	public List<String> getExcludedScopes() {
 		String[] split = excludedScopes == null ? new String[0] : excludedScopes.split(",");
 		return Arrays.asList(split);
 	}
 
+	@Override
 	public String getIncludedArtifacts() {
 		return includedArtifacts;
 	}
 
+	@Override
 	public String getIncludedGroups() {
 		return includedGroups;
 	}
 
+	@Override
 	public String getExcludedGroups() {
 		return excludedGroups;
 	}
 
+	@Override
 	public String getExcludedArtifacts() {
 		return excludedArtifacts;
 	}

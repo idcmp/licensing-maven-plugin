@@ -12,38 +12,105 @@ This will walk through your multimodule project, finding all those
 third-party-licensing.xml files and aggregate them together into a
 target/aggregated-third-party-licensing.xml.
 
+If you're attaching this to an execution, use:
 
----
-TODO Here's a rough draft.
+$ mvn org.linuxstuff.maven:licensing-maven-plugin:aggregate
 
-So:
+This will only generate a target/aggregated-third-party-licensing.xml in your parent project (without failing your build).
 
-You have a project called licensing-requirements.  It has in it 
-DONE List of Licenses You Dislike (end eventually a list of licenses you Like)
-DONE Mapping of Missing Licenses to Artifacts
-DONE Coalesce license names.
-??? Optionally some configuration maybe about how to enforce licensing or something (something misc that may not really be there)
+------------------------------
 
-There's a license plugin.  You can run license:check on a project.
+Here's an example licensing requirements XML file:
 
-DONE Its configuration adds the licensing-requirements as a dependency
-(SORT OF) DONE It finds the files in licensing-requirements through the classpath and uses those
-DONE It generates a third-party-licensing-summary.xml in target/
-NO Could it attach the third-party-licensing to the reactor? -> This makes no sense (since to other projects, this project is simply a dependency (ie, it's a 3rd party))
-DONE It can be configured to fail the build on disliked or missing licenses.
-DONE It's bound to a verify phase.
-There's a license:aggregate sitereport.  It walks the reactorProjects (assuming that if A lists B and B lists C that A,B,C all show up):
+<?xml version="1.0" encoding="UTF-8"?>
+<licensing-requirements>
 
-DONE Looks for third-party-licensing-summary.xml files in target/
-DONE Generates an aggregated-third-party-licensing-summary.xml report in target/site
-It should attach that summary to the reactor.
-I guess it could be configured to fail on missing/disliked but I'm not sure that's needed.
+        <!-- Many projects forget to include a <license/> block, so we need to explicitly list them here. -->
+        <missing-licenses>
+                <artifact id="org.springframework:web-mvc:3.0.6">
+                        <license>Spring Source License</license>
+                </artifact>
+        </missing-licenses>
 
-There's a license-report project.  It:
+        <!-- Sometimes different people call the same license the same thing, we fix this up here. -->
+        <!-- Note that *we* understand different versions of the same license are effectively different -->
+        <!-- licenses and do not coalesce those together. You may not care though. -->
+        <coalesced-licenses>
+                <license name="GPLv2">
+                        <aka>GNU Public License Version 2</aka>
+                        <aka>The GNU Public License, Version 2.0</aka>
+                </license>
+        </coalesced-licenses>
 
-Lists the aggregate-license-summary of the different reactor builds as dependencies.
-Fetches those and puts them in a target/foo/ directory.
-DONE Merges all of those together into one big XML file. --weak
-DONE Generates a PDF using Jasper Reports from that XML file.
-DONE Attaches the PDF as its artifact to be deployed.
- 
+        <!-- Maybe you don't like the GPL, maybe you don't like a particular countries open source license. Here's  -->
+        <!-- where you declare which licenses you don't like. Other than AGPL/GPL, open source licenses don't really -->
+        <!-- have an impact on your code, but sometimes people like to exclude the LGPL as the baby in the bathwater. -->
+        <disliked-license>GPLv2</disliked-license>
+        <disliked-license>LGPL</disliked-license>
+
+	<!-- And with any set of strict rules, there are exceptions. Here we list artifacts that we wish to make -->
+	<!--exempt from failing dislike checks. -->
+        <dislike-exemption>xom:xom:jar:1.0</dislike-exemption>
+
+</licensing-requirements>
+
+------------------------------
+
+Here's an example of how to bind the plugin into your build:
+
+...
+<plugins>
+  <plugin>
+    <groupId>org.linuxstuff.maven</groupId>
+    <artifactId>licensing-maven-plugin</artifactId>
+    <version>1.5-SNAPSHOT</version>
+    <executions>
+      <execution>
+        <id>enforce-licensing</id>
+        <phase>compile</phase>
+        <goals>
+          <goal>check</goal>
+        </goals>
+        <configuration>
+          <failIfDisliked>true</failIfDisliked>
+	  <failIfMissing>true</failIfMissing>
+          <licensingRequirementFiles>
+	    <!-- You can specify more than one file here. -->
+            <licensingRequirementFile>licensing-requirements.xml</licensingRequirementFile>
+          </licensingRequirementFiles>
+	  <!-- You can exclude your own stuff here -->
+          <excludedGroups>org.example</excludedGroups>
+        </configuration>
+      </execution>
+      <execution>
+        <id>generate-licensing-xml</id>
+        <phase>install</phase>
+        <goals>
+          <goal>aggregate</goal>
+        </goals>
+        <configuration>
+	 <!-- aggregate goal does not support failIf* configuration like above. -->
+          <licensingRequirementFiles>
+            <licensingRequirementFile>licensing-requirements.xml</licensingRequirementFile>
+          </licensingRequirementFiles>
+          <excludedGroups>org.example</excludedGroups>
+        </configuration>
+      </execution>
+    </executions>
+    <dependencies>
+     <!-- The licensing requirements XML should live in its own separate project to avoid chicken/egg problems. -->
+      <dependency>
+        <groupId>org.linuxstuff.example</groupId>
+        <artifactId>license-requirements</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </dependency>
+    </dependencies>
+  </plugin>
+</plugins>
+
+
+------------------------------
+
+TODO attach aggregated-third-party-licensing.xml to be deployed
+TODO format output XML 
+TODO make a proper maven site for the plugin

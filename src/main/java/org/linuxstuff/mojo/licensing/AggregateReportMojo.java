@@ -52,6 +52,12 @@ public class AggregateReportMojo extends CheckMojo {
 
 		for (MavenProject project : reactorProjects) {
 
+			String licensingSkip = (String) project.getProperties().get("licensing.skip");
+			if (licensingSkip != null && Boolean.parseBoolean(licensingSkip) == true) {
+				getLog().info("Licensing: Skipping project " + project);
+				continue;
+			}
+
 			LicensingReport report = generateReport(project);
 
 			bigReport.combineWith(report);

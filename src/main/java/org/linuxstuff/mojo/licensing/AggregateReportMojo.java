@@ -52,21 +52,26 @@ public class AggregateReportMojo extends CheckMojo {
 
 		for (MavenProject project : reactorProjects) {
 
-			String licensingSkip = (String) project.getProperties().get("licensing.skip");
-			if (licensingSkip != null && Boolean.parseBoolean(licensingSkip) == true) {
-				getLog().info("Licensing: Skipping project " + project);
-				continue;
+			if (shouldReportOn(project)) {
+				LicensingReport report = generateReport(project);
+
+				bigReport.combineWith(report);
 			}
-
-			LicensingReport report = generateReport(project);
-
-			bigReport.combineWith(report);
-
 		}
 
 		File file = new File(project.getBuild().getDirectory(), aggregatedThirdPartyLicensingFilename);
 
 		bigReport.writeReport(file);
+
+	}
+
+	private boolean shouldReportOn(MavenProject project) {
+		String licensingSkip = (String) project.getProperties().get("licensing.skip");
+		if (licensingSkip != null && Boolean.parseBoolean(licensingSkip) == true) {
+			getLog().info("Licensing: Skipping project " + project);
+			return false;
+		}
+		return true;
 
 	}
 

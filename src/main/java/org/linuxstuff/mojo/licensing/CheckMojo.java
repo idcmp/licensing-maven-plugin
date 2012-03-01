@@ -18,6 +18,7 @@ import org.linuxstuff.mojo.licensing.model.LicensingReport;
  * 
  * @goal check
  * @phase verify
+ * @threadSafe
  * @requiresDependencyResolution test
  * @requiresProject true
  * @since 1.0

@@ -18,6 +18,7 @@ import org.linuxstuff.mojo.licensing.model.LicensingReport;
  * @requiresDependencyResolution test
  * @requiresProject true
  * @aggregator
+ * @threadSafe
  */
 public class AggregateReportMojo extends CheckMojo {
 

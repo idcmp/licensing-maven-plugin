@@ -16,6 +16,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 /**
  * @goal collect-reports
  * @requiresProject true
+ * @threadSafe
  * @aggregator
  */
 public class CollectReportsMojo extends AbstractLicensingMojo {

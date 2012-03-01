@@ -47,6 +47,8 @@ import org.codehaus.plexus.logging.Logger;
  * @author tchemit <chemit@codelutin.com> (originally)
  * @plexus.component role="org.linuxstuff.mojo.licensing.DependenciesTool"
  *                   role-hint="default"
+ *                   
+ * @threadSafe
  * @since 1.0
  */
 public class DefaultDependenciesTool extends AbstractLogEnabled implements DependenciesTool {

@@ -42,6 +42,14 @@ public class CheckMojo extends AbstractLicensingMojo {
 	protected boolean failIfDisliked;
 
 	/**
+	 * If using liked licenses, only use those in the report.
+	 * 
+	 * @parameter expression="${includeOnlyLikedInReport}" default-value="true"
+	 * @since 1.0
+	 */
+	protected boolean includeOnlyLikedInReport;
+
+	/**
 	 * Fail the build if any dependencies are either under disliked licenses or
 	 * are missing licensing information.
 	 */
@@ -84,7 +92,14 @@ public class CheckMojo extends AbstractLicensingMojo {
 				aReport.addMissingLicense(entry);
 			} else {
 				for (String license : licenses) {
-					entry.addLicense(license);
+					if (includeOnlyLikedInReport && licensingRequirements.containsLikedLicenses()) {
+						if (licensingRequirements.isLikedLicense( license )) {
+							entry.addLicense(license);
+						}
+					}
+					else {
+						entry.addLicense(license);
+					}
 				}
 
 				if (isDisliked(mavenProject)) {

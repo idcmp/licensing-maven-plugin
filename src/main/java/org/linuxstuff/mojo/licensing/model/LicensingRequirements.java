@@ -19,6 +19,10 @@ public class LicensingRequirements {
 	@XStreamImplicit(itemFieldName = "disliked-license")
 	private Set<String> dislikedLicenses = new HashSet<String>();
 
+	@XStreamAlias("liked-licenses")
+	@XStreamImplicit(itemFieldName = "liked-license")
+	private Set<String> likedLicenses = new HashSet<String>();
+
 	@XStreamAlias("dislike-exemptions")
 	@XStreamImplicit(itemFieldName = "dislike-exemption")
 	private Set<String> dislikeExemptions = new HashSet<String>();
@@ -35,6 +39,10 @@ public class LicensingRequirements {
 		dislikedLicenses.add(licenseName);
 	}
 
+	public void addLikedLicense(String licenseName) {
+		likedLicenses.add(licenseName);
+	}
+
 	public void addDislikeExemption(String artifactId) {
 		dislikeExemptions.add(artifactId);
 	}
@@ -43,6 +51,10 @@ public class LicensingRequirements {
 		return dislikedLicenses.contains(license);
 	}
 
+	public boolean isLikedLicense(String license) {
+		return likedLicenses.contains(license);
+	}
+	
 	public String getCorrectLicenseName(String name) {
 		for (CoalescedLicense coalesced : coalescedLicenses) {
 			if (coalesced.getFinalName().equalsIgnoreCase(name.trim()))
@@ -79,6 +91,10 @@ public class LicensingRequirements {
 		return !dislikedLicenses.isEmpty();
 	}
 
+	public boolean containsLikedLicenses() {
+		return !likedLicenses.isEmpty();
+	}
+
 	public Set<ArtifactWithLicenses> getMissingLicenses() {
 		return missingLicenses;
 	}
@@ -91,6 +107,10 @@ public class LicensingRequirements {
 		return dislikedLicenses;
 	}
 
+	public Set<String> getLikedLicenses() {
+		return likedLicenses;
+	}
+
 	public Set<String> getDislikeExemptions() {
 		return dislikeExemptions;
 	}
@@ -100,6 +120,12 @@ public class LicensingRequirements {
 		if (req.getDislikedLicenses() != null) {
 			for (String source : req.getDislikedLicenses()) {
 				addDislikedLicense(source);
+			}
+		}
+
+		if (req.getLikedLicenses() != null) {
+			for (String source : req.getLikedLicenses()) {
+				addLikedLicense(source);
 			}
 		}
 

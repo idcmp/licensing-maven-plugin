@@ -252,7 +252,8 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 	 */
 	protected boolean isDisliked(MavenProject mavenProject) {
 
-		if (!licensingRequirements.containsDislikedLicenses()) {
+		if (!licensingRequirements.containsDislikedLicenses()
+				&& !licensingRequirements.containsLikedLicenses()) {
 			return false;
 		}
 
@@ -262,6 +263,14 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 
 		Set<String> licenses = collectLicensesForMavenProject(mavenProject);
 
+		if (licensingRequirements.containsLikedLicenses()) {
+			for (String license : licenses) {
+
+				if (licensingRequirements.isLikedLicense(license))
+					return false;
+			}
+			return true;
+		}
 		for (String license : licenses) {
 
 			if (!licensingRequirements.isDislikedLicense(license))

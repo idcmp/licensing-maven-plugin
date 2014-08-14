@@ -213,7 +213,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
             return;
         }
 
-        List<LicensingRequirements> requirements = new ArrayList<LicensingRequirements>();
+        List<LicensingRequirements> requirements = new ArrayList<>();
 
         for (String requirementsFile : licensingRequirementFiles) {
 
@@ -279,7 +279,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     }
 
     protected Set<String> collectLicensesForMavenProject(MavenProject mavenProject) {
-        Set<String> licenses = new HashSet<String>();
+        Set<String> licenses = new HashSet<>();
 
         /**
          * If an artifact declares a license, we will use it <b>instead</b> of
@@ -288,23 +288,24 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
         if (mavenProject.getLicenses() != null && !mavenProject.getLicenses().isEmpty()) {
             getLog().debug("Licensing: " + mavenProject.getId() + " has licensing information in it.");
 
-			List<License> embeddedLicenses = mavenProject.getLicenses();
-			for (License license : embeddedLicenses) {
-				if (!StringUtils.isBlank(license.getName())) {
-					licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
-				}
-			}
+            List<License> embeddedLicenses = mavenProject.getLicenses();
+            for (License license : embeddedLicenses) {
+                if (!StringUtils.isBlank(license.getName())) {
+                    licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
+                }
+            }
 
-		}
+        }
 
-		if (licenses.isEmpty()) {
-			getLog().debug("Licensing: " + mavenProject.getId() + " has no license information.  Loading hardcoded licenses.");
-			Set<String> hardcodedLicenses = licensingRequirements.getLicenseNames(mavenProject.getId());
-			for (String license : hardcodedLicenses) {
-				licenses.add(licensingRequirements.getCorrectLicenseName(license));
-			}
-		}
-
+        if (licenses.isEmpty()) {
+            getLog().debug(
+                    "Licensing: " + mavenProject.getId() + " has no license information.  Loading hardcoded licenses.");
+            Set<String> hardcodedLicenses = licensingRequirements.getLicenseNames(mavenProject.getId());
+            for (String license : hardcodedLicenses) {
+                licenses.add(licensingRequirements.getCorrectLicenseName(license));
+            }
+        }
+        return licenses;
     }
 
     @Override

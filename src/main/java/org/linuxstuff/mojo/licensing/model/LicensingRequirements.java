@@ -10,18 +10,18 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 public class LicensingRequirements {
 
     @XStreamAlias("missing-licenses")
-    private Set<ArtifactWithLicenses> missingLicenses = new HashSet<ArtifactWithLicenses>();
+    private Set<ArtifactWithLicenses> missingLicenses = new HashSet<>();
 
     @XStreamAlias("coalesced-licenses")
-    private Set<CoalescedLicense> coalescedLicenses = new HashSet<CoalescedLicense>();
+    private Set<CoalescedLicense> coalescedLicenses = new HashSet<>();
 
     @XStreamAlias("disliked-licenses")
     @XStreamImplicit(itemFieldName = "disliked-license")
-    private Set<String> dislikedLicenses = new HashSet<String>();
+    private Set<String> dislikedLicenses = new HashSet<>();
 
     @XStreamAlias("dislike-exemptions")
     @XStreamImplicit(itemFieldName = "dislike-exemption")
-    private Set<String> dislikeExemptions = new HashSet<String>();
+    private Set<String> dislikeExemptions = new HashSet<>();
 
     public void addArtifactMissingLicense(ArtifactWithLicenses missingLicense) {
         missingLicenses.add(missingLicense);
@@ -65,7 +65,7 @@ public class LicensingRequirements {
     }
 
     public Set<String> getLicenseNames(String id) {
-        Set<String> licenses = new HashSet<String>();
+        Set<String> licenses = new HashSet<>();
         for (ArtifactWithLicenses missing : missingLicenses) {
             if (missing.getArtifactId().equals(id)) {
                 licenses.addAll(missing.getLicenses());

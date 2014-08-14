@@ -76,6 +76,7 @@ public class CheckMojo extends AbstractLicensingMojo {
 
             entry.setArtifactId(mavenProject.getId());
             entry.setName(mavenProject.getName());
+            entry.setProjectUrl(mavenProject.getUrl());
 
             Set<String> licenses = collectLicensesForMavenProject(mavenProject);
 

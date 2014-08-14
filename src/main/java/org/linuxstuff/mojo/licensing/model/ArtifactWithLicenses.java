@@ -18,16 +18,20 @@ public class ArtifactWithLicenses {
     @XStreamAlias("name")
     private String name;
 
+    @XStreamAsAttribute
+    @XStreamAlias("url")
+    private String projectUrl;
+
     @XStreamImplicit(itemFieldName = "license")
     private Set<String> licenses;
 
     public ArtifactWithLicenses() {
-        licenses = new HashSet<String>();
+        licenses = new HashSet<>();
     }
 
     public ArtifactWithLicenses(String artifactId) {
         this.artifactId = artifactId;
-        licenses = new HashSet<String>();
+        licenses = new HashSet<>();
     }
 
     public ArtifactWithLicenses(String artifactId, Set<String> licenses) {
@@ -65,6 +69,14 @@ public class ArtifactWithLicenses {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setProjectUrl(String projectUrl) {
+        this.projectUrl = projectUrl;
+    }
+
+    public String getProjectUrl() {
+        return projectUrl;
     }
 
     @Override

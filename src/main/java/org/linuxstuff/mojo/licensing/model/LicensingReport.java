@@ -30,13 +30,13 @@ public class LicensingReport {
     boolean passing = true;
 
     @XStreamAlias("artifacts")
-    private Set<ArtifactWithLicenses> licensedArtifacts = new HashSet<ArtifactWithLicenses>();
+    private Set<ArtifactWithLicenses> licensedArtifacts = new HashSet<>();
 
     @XStreamAlias("license-missing")
-    private Set<ArtifactWithLicenses> licenseMissing = new HashSet<ArtifactWithLicenses>();
+    private Set<ArtifactWithLicenses> licenseMissing = new HashSet<>();
 
     @XStreamAlias("disliked-artifacts")
-    private Set<ArtifactWithLicenses> dislikedArtifacts = new HashSet<ArtifactWithLicenses>();
+    private Set<ArtifactWithLicenses> dislikedArtifacts = new HashSet<>();
 
     private void updatePassing() {
 

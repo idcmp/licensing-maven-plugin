@@ -24,7 +24,7 @@ public abstract class AbstractLicensingTest {
 		}
 
 		public void setLicensingRequirements(LicensingRequirements requirements) {
-			this.licensingRequirements = requirements;
+            licensingRequirements = requirements;
 		}
 	}
 

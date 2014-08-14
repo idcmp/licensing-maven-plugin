@@ -68,7 +68,7 @@ public class AggregateReportMojo extends CheckMojo {
 
 	private boolean shouldReportOn(MavenProject project) {
 		String licensingSkip = (String) project.getProperties().get("licensing.skip");
-		if (licensingSkip != null && Boolean.parseBoolean(licensingSkip) == true) {
+		if (licensingSkip != null && Boolean.parseBoolean(licensingSkip)) {
 			getLog().info("Licensing: Skipping project " + project);
 			return false;
 		}

@@ -30,7 +30,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
  * @see CheckMojo
  * @see CollectReportsMojo
  */
-abstract public class AbstractLicensingMojo extends AbstractMojo implements MavenProjectDependenciesConfigurator {
+public abstract class AbstractLicensingMojo extends AbstractMojo implements MavenProjectDependenciesConfigurator {
 
 	/**
 	 * Used to read in the licensing-requirements from the plugin's classpath.
@@ -224,7 +224,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 			}
 		}
 
-		this.licensingRequirements = mergeLicenseRequirements(requirements);
+        licensingRequirements = mergeLicenseRequirements(requirements);
 	}
 
 	/**
@@ -283,7 +283,7 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		 * If an artifact declares a license, we will use it <b>instead</b> of
 		 * anything defined in licensing requirements.
 		 */
-		if (mavenProject.getLicenses() != null && mavenProject.getLicenses().size() > 0) {
+		if (mavenProject.getLicenses() != null && !mavenProject.getLicenses().isEmpty()) {
 			getLog().debug("Licensing: " + mavenProject.getId() + " has licensing information in it.");
 
 			List<License> embeddedLicenses = mavenProject.getLicenses();

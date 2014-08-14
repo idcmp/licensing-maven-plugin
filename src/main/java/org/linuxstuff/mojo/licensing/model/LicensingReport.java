@@ -38,10 +38,7 @@ public class LicensingReport {
 	@XStreamAlias("disliked-artifacts")
 	private Set<ArtifactWithLicenses> dislikedArtifacts = new HashSet<ArtifactWithLicenses>();
 
-	public LicensingReport() {
-	}
-
-	private void updatePassing() {
+    private void updatePassing() {
 
 		passing = (licenseMissing.isEmpty() && dislikedArtifacts.isEmpty());
 	}

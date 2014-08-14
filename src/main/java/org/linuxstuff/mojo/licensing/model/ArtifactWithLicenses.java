@@ -27,7 +27,7 @@ public class ArtifactWithLicenses {
 
 	public ArtifactWithLicenses(String artifactId) {
 		this.artifactId = artifactId;
-		this.licenses = new HashSet<String>();
+        licenses = new HashSet<String>();
 	}
 
 	public ArtifactWithLicenses(String artifactId, Set<String> licenses) {

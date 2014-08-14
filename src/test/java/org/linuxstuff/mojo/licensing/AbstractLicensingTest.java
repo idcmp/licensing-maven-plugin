@@ -12,38 +12,38 @@ import org.linuxstuff.mojo.licensing.model.LicensingRequirements;
 
 public abstract class AbstractLicensingTest {
 
-	protected LicensingRequirements licensingRequirements;
-	protected MavenProject mavenProject;
-	protected TestLicensingMojo mojo;
+    protected LicensingRequirements licensingRequirements;
+    protected MavenProject mavenProject;
+    protected TestLicensingMojo mojo;
 
-	class TestLicensingMojo extends AbstractLicensingMojo {
+    class TestLicensingMojo extends AbstractLicensingMojo {
 
-		@Override
-		public void execute() throws MojoExecutionException, MojoFailureException {
+        @Override
+        public void execute() throws MojoExecutionException, MojoFailureException {
 
-		}
+        }
 
-		public void setLicensingRequirements(LicensingRequirements requirements) {
+        public void setLicensingRequirements(LicensingRequirements requirements) {
             licensingRequirements = requirements;
-		}
-	}
+        }
+    }
 
-	@Before
-	public void setUp() {
-		licensingRequirements = new LicensingRequirements();
+    @Before
+    public void setUp() {
+        licensingRequirements = new LicensingRequirements();
 
-		mavenProject = new MavenProject();
-		Model model = mavenProject.getModel();
-		model.setGroupId("groupdId");
-		model.setArtifactId("artifactId");
-		model.setVersion("1.0");
-		model.setPackaging("jar");
+        mavenProject = new MavenProject();
+        Model model = mavenProject.getModel();
+        model.setGroupId("groupdId");
+        model.setArtifactId("artifactId");
+        model.setVersion("1.0");
+        model.setPackaging("jar");
 
-		mavenProject.setLicenses(new ArrayList<License>());
+        mavenProject.setLicenses(new ArrayList<License>());
 
-		mojo = new TestLicensingMojo();
-		mojo.setLicensingRequirements(licensingRequirements);
+        mojo = new TestLicensingMojo();
+        mojo.setLicensingRequirements(licensingRequirements);
 
-	}
+    }
 
 }

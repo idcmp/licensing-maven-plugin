@@ -23,9 +23,8 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 /**
- * Some basic plumbing for licensing mojos. I've borrowed
- * {@code MavenProjectDependenciesConfigurator} from the license plugin since it
- * rocks.
+ * Some basic plumbing for licensing mojos. I've borrowed {@code MavenProjectDependenciesConfigurator} from the
+ * license plugin since it rocks.
  * 
  * @see CheckMojo
  * @see CollectReportsMojo
@@ -294,8 +293,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
                     licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
                 }
             }
-
-        }
+        }        
 
         if (licenses.isEmpty()) {
             getLog().debug(

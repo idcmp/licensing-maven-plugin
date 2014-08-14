@@ -13,11 +13,11 @@ import org.linuxstuff.mojo.licensing.model.CoalescedLicense;
 
 public class LicenseCoalescingTest extends AbstractLicensingTest {
 
-	private CoalescedLicense coalescedLicense;
+    private CoalescedLicense coalescedLicense;
 
-	@Before
+    @Before
 	public void makeSimpleCoalescedLicense() {
-		Set<String> aka = new HashSet<String>();
+		Set<String> aka = new HashSet<>();
 		aka.add("finalName");
 		aka.add("final Name ");
 		aka.add("FINAL NAME ");
@@ -26,71 +26,71 @@ public class LicenseCoalescingTest extends AbstractLicensingTest {
 
 	}
 
-	/**
-	 * A simple test to ensure that looking for a license name has spaces
-	 * trimmed and is case insensitive. You clod.
-	 */
-	@Test
-	public void simpleCoalescedTest() {
+    /**
+     * A simple test to ensure that looking for a license name has spaces
+     * trimmed and is case insensitive. You clod.
+     */
+    @Test
+    public void simpleCoalescedTest() {
 
-		licensingRequirements.addCoalescedLicense(coalescedLicense);
+        licensingRequirements.addCoalescedLicense(coalescedLicense);
 
-		assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName("Final Name v1.0"));
-		assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName("finalname"));
-		assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName("   fINAlname   "));
-		assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName(" finalname "));
-		assertEquals("GPL", licensingRequirements.getCorrectLicenseName("GPL"));
+        assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName("Final Name v1.0"));
+        assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName("finalname"));
+        assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName("   fINAlname   "));
+        assertEquals("Final Name v1.0", licensingRequirements.getCorrectLicenseName(" finalname "));
+        assertEquals("GPL", licensingRequirements.getCorrectLicenseName("GPL"));
 
-	}
+    }
 
-	/**
-	 * Ensure that embedded licenses are handled.
-	 */
-	@Test
-	public void testThatEmbeddedLicensesAreCoalesced() {
-		licensingRequirements.addCoalescedLicense(coalescedLicense);
+    /**
+     * Ensure that embedded licenses are handled.
+     */
+    @Test
+    public void testThatEmbeddedLicensesAreCoalesced() {
+        licensingRequirements.addCoalescedLicense(coalescedLicense);
 
-		License license = new License();
-		license.setName(" fInAlNamE ");
-		mavenProject.getLicenses().add(license);
+        License license = new License();
+        license.setName(" fInAlNamE ");
+        mavenProject.getLicenses().add(license);
 
-		Set<String> licenses = mojo.collectLicensesForMavenProject(mavenProject);
+        Set<String> licenses = mojo.collectLicensesForMavenProject(mavenProject);
 
-		assertEquals(1, licenses.size());
+        assertEquals(1, licenses.size());
 
-		assertEquals("Final Name v1.0", licenses.iterator().next());
+        assertEquals("Final Name v1.0", licenses.iterator().next());
 
-	}
+    }
 
-	/**
-	 * Ensure that the licenses in licensing requirements are also coalesced.
-	 */
-	@Test
-	public void testThatConfiguredLicensesAreCoalesced() {
+    /**
+     * Ensure that the licenses in licensing requirements are also coalesced.
+     */
+    @Test
+    public void testThatConfiguredLicensesAreCoalesced() {
 
-		licensingRequirements.addCoalescedLicense(coalescedLicense);
+        licensingRequirements.addCoalescedLicense(coalescedLicense);
 
-		ArtifactWithLicenses awl = new ArtifactWithLicenses(mavenProject.getId());
-		awl.addLicense("finalname");
+        ArtifactWithLicenses awl = new ArtifactWithLicenses(mavenProject.getId());
+        awl.addLicense("finalname");
 
-		licensingRequirements.addArtifactMissingLicense(awl);
+        licensingRequirements.addArtifactMissingLicense(awl);
 
-		Set<String> licenses = mojo.collectLicensesForMavenProject(mavenProject);
+        Set<String> licenses = mojo.collectLicensesForMavenProject(mavenProject);
 
-		assertEquals(1, licenses.size());
+        assertEquals(1, licenses.size());
 
-		assertEquals("Final Name v1.0", licenses.iterator().next());
+        assertEquals("Final Name v1.0", licenses.iterator().next());
 
-	}
+    }
 
-	/**
-	 * Ensure {@code CoalescedLicense} are compared solely based on their
-	 * finalname.
-	 */
-	@Test
+    /**
+     * Ensure {@code CoalescedLicense} are compared solely based on their
+     * finalname.
+     */
+    @Test
 	public void testComparingCoalescedLicenses() {
 
-		Set<String> aka = new HashSet<String>();
+		Set<String> aka = new HashSet<>();
 		aka.add("hello");
 		aka.add("goodbye");
 
@@ -99,5 +99,4 @@ public class LicenseCoalescingTest extends AbstractLicensingTest {
 		assertEquals(coalescedLicense, coalescedLicense2);
 
 	}
-
 }

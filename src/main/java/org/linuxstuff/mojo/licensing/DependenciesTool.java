@@ -38,26 +38,27 @@ import org.apache.maven.project.MavenProject;
  */
 public interface DependenciesTool {
 
-	/**
-	 * For a given {@code project}, obtain the universe of his dependencies
-	 * after applying transitivity and filtering rules given in the
-	 * {@code configuration} object.
-	 * <p/>
-	 * Result is given in a map where keys are unique artifact id
-	 * 
-	 * @param project
-	 *            the project to scann
-	 * @param configuration
-	 *            the configuration
-	 * @param localRepository
-	 *            local repository used to resolv dependencies
-	 * @param remoteRepositories
-	 *            remote repositories used to resolv dependencies
-	 * @param cache
-	 *            a optional cache where to keep resolved dependencies
-	 * @return the map of resolved dependencies indexed by their unique id.
-	 * @see MavenProjectDependenciesConfigurator
-	 */
-	SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project, MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
-			List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache);
+    /**
+     * For a given {@code project}, obtain the universe of his dependencies
+     * after applying transitivity and filtering rules given in the
+     * {@code configuration} object.
+     * <p/>
+     * Result is given in a map where keys are unique artifact id
+     * 
+     * @param project
+     *            the project to scann
+     * @param configuration
+     *            the configuration
+     * @param localRepository
+     *            local repository used to resolv dependencies
+     * @param remoteRepositories
+     *            remote repositories used to resolv dependencies
+     * @param cache
+     *            a optional cache where to keep resolved dependencies
+     * @return the map of resolved dependencies indexed by their unique id.
+     * @see MavenProjectDependenciesConfigurator
+     */
+    SortedMap<String, MavenProject> loadProjectDependencies(MavenProject project,
+            MavenProjectDependenciesConfigurator configuration, ArtifactRepository localRepository,
+            List<ArtifactRepository> remoteRepositories, SortedMap<String, MavenProject> cache);
 }

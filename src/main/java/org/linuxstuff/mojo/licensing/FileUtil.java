@@ -36,37 +36,37 @@ import java.io.IOException;
  */
 public class FileUtil {
 
-	/**
-	 * Creates the directory (and his parents) if necessary.
-	 * 
-	 * @param dir
-	 *            the directory to create if not exisiting
-	 * @return {@code true} if directory was created, {@code false} if was no
-	 *         need to create it
-	 * @throws IOException
-	 *             if could not create directory
-	 */
-	public static boolean createDirectoryIfNecessary(File dir) throws IOException {
-		if (!dir.exists()) {
-			boolean b = dir.mkdirs();
-			if (!b) {
-				throw new IOException("Could not create directory " + dir);
-			}
-			return true;
-		}
-		return false;
-	}
+    /**
+     * Creates the directory (and his parents) if necessary.
+     * 
+     * @param dir
+     *            the directory to create if not exisiting
+     * @return {@code true} if directory was created, {@code false} if was no
+     *         need to create it
+     * @throws IOException
+     *             if could not create directory
+     */
+    public static boolean createDirectoryIfNecessary(File dir) throws IOException {
+        if (!dir.exists()) {
+            boolean b = dir.mkdirs();
+            if (!b) {
+                throw new IOException("Could not create directory " + dir);
+            }
+            return true;
+        }
+        return false;
+    }
 
-	public static boolean createNewFile(File file) throws IOException {
-		createDirectoryIfNecessary(file.getParentFile());
-		if (!file.exists()) {
-			boolean b = file.createNewFile();
-			if (!b) {
-				throw new IOException("Could not create new file " + file);
-			}
-			return true;
-		}
-		return false;
-	}
+    public static boolean createNewFile(File file) throws IOException {
+        createDirectoryIfNecessary(file.getParentFile());
+        if (!file.exists()) {
+            boolean b = file.createNewFile();
+            if (!b) {
+                throw new IOException("Could not create new file " + file);
+            }
+            return true;
+        }
+        return false;
+    }
 
 }

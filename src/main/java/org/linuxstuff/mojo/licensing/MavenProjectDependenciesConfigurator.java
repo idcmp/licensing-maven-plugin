@@ -37,46 +37,46 @@ import java.util.List;
  */
 public interface MavenProjectDependenciesConfigurator {
 
-	/**
-	 * @return {@code true} if should include transitive dependencies,
-	 *         {@code false} to include only direct dependencies.
-	 */
-	boolean isIncludeTransitiveDependencies();
+    /**
+     * @return {@code true} if should include transitive dependencies,
+     *         {@code false} to include only direct dependencies.
+     */
+    boolean isIncludeTransitiveDependencies();
 
-	/**
-	 * @return list of scopes to include while loading dependencies, if
-	 *         {@code null} is setted, then include all scopes.
-	 */
-	List<String> getIncludedScopes();
+    /**
+     * @return list of scopes to include while loading dependencies, if
+     *         {@code null} is setted, then include all scopes.
+     */
+    List<String> getIncludedScopes();
 
-	/**
-	 * @return list of scopes to exclude while loading dependencies, if
-	 *         {@code null} is setted, then include all scopes.
-	 */
-	List<String> getExcludedScopes();
+    /**
+     * @return list of scopes to exclude while loading dependencies, if
+     *         {@code null} is setted, then include all scopes.
+     */
+    List<String> getExcludedScopes();
 
-	/**
-	 * @return a pattern to include dependencies by thier {@code artificatId},
-	 *         if {@code null} is setted then include all artifacts.
-	 */
-	String getIncludedArtifacts();
+    /**
+     * @return a pattern to include dependencies by thier {@code artificatId},
+     *         if {@code null} is setted then include all artifacts.
+     */
+    String getIncludedArtifacts();
 
-	/**
-	 * @return a pattern to include dependencies by their {@code groupId}, if
-	 *         {@code null} is setted then include all artifacts.
-	 */
-	String getIncludedGroups();
+    /**
+     * @return a pattern to include dependencies by their {@code groupId}, if
+     *         {@code null} is setted then include all artifacts.
+     */
+    String getIncludedGroups();
 
-	/**
-	 * @return a pattern to exclude dependencies by their {@code artifactId}, if
-	 *         {@code null} is setted the no exclude is done on artifactId.
-	 */
-	String getExcludedGroups();
+    /**
+     * @return a pattern to exclude dependencies by their {@code artifactId}, if
+     *         {@code null} is setted the no exclude is done on artifactId.
+     */
+    String getExcludedGroups();
 
-	/**
-	 * @return a pattern to exclude dependencies by their {@code groupId}, if
-	 *         {@code null} is setted then no exclude is done on groupId.
-	 */
-	String getExcludedArtifacts();
+    /**
+     * @return a pattern to exclude dependencies by their {@code groupId}, if
+     *         {@code null} is setted then no exclude is done on groupId.
+     */
+    String getExcludedArtifacts();
 
 }

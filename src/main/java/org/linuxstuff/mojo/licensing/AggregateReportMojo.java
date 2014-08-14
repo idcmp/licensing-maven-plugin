@@ -22,58 +22,58 @@ import org.linuxstuff.mojo.licensing.model.LicensingReport;
  */
 public class AggregateReportMojo extends CheckMojo {
 
-	/**
-	 * Maven ProjectHelper.
-	 * 
-	 * @component
-	 * @readonly
-	 */
-	private MavenProjectHelper projectHelper;
+    /**
+     * Maven ProjectHelper.
+     * 
+     * @component
+     * @readonly
+     */
+    private MavenProjectHelper projectHelper;
 
-	/**
-	 * The projects in the reactor for aggregation report.
-	 * 
-	 * @parameter expression="${reactorProjects}"
-	 * @readonly
-	 * @required
-	 */
-	private List<MavenProject> reactorProjects;
+    /**
+     * The projects in the reactor for aggregation report.
+     * 
+     * @parameter expression="${reactorProjects}"
+     * @readonly
+     * @required
+     */
+    private List<MavenProject> reactorProjects;
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
 
-		if (!project.isExecutionRoot()) {
-			getLog().debug(project.getId() + " is not execution root, not making aggregated licensing report.");
-			return;
-		}
+        if (!project.isExecutionRoot()) {
+            getLog().debug(project.getId() + " is not execution root, not making aggregated licensing report.");
+            return;
+        }
 
-		readLicensingRequirements();
+        readLicensingRequirements();
 
-		LicensingReport bigReport = new LicensingReport();
+        LicensingReport bigReport = new LicensingReport();
 
-		for (MavenProject project : reactorProjects) {
+        for (MavenProject project : reactorProjects) {
 
-			if (shouldReportOn(project)) {
-				LicensingReport report = generateReport(project);
+            if (shouldReportOn(project)) {
+                LicensingReport report = generateReport(project);
 
-				bigReport.combineWith(report);
-			}
-		}
+                bigReport.combineWith(report);
+            }
+        }
 
-		File file = new File(project.getBuild().getDirectory(), aggregatedThirdPartyLicensingFilename);
+        File file = new File(project.getBuild().getDirectory(), aggregatedThirdPartyLicensingFilename);
 
-		bigReport.writeReport(file);
+        bigReport.writeReport(file);
 
-	}
+    }
 
-	private boolean shouldReportOn(MavenProject project) {
-		String licensingSkip = (String) project.getProperties().get("licensing.skip");
-		if (licensingSkip != null && Boolean.parseBoolean(licensingSkip)) {
-			getLog().info("Licensing: Skipping project " + project);
-			return false;
-		}
-		return true;
+    private boolean shouldReportOn(MavenProject project) {
+        String licensingSkip = (String) project.getProperties().get("licensing.skip");
+        if (licensingSkip != null && Boolean.parseBoolean(licensingSkip)) {
+            getLog().info("Licensing: Skipping project " + project);
+            return false;
+        }
+        return true;
 
-	}
+    }
 
 }

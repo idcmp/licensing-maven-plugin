@@ -21,54 +21,54 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
  */
 public class CollectReportsMojo extends AbstractLicensingMojo {
 
-	/**
-	 * Maven ProjectHelper.
-	 * 
-	 * @component
-	 * @readonly
-	 */
-	private MavenProjectHelper projectHelper;
+    /**
+     * Maven ProjectHelper.
+     * 
+     * @component
+     * @readonly
+     */
+    private MavenProjectHelper projectHelper;
 
-	/**
-	 * The projects in the reactor for aggregation report.
-	 * 
-	 * @parameter expression="${reactorProjects}"
-	 * @readonly
-	 * @required
-	 */
-	private List<MavenProject> reactorProjects;
+    /**
+     * The projects in the reactor for aggregation report.
+     * 
+     * @parameter expression="${reactorProjects}"
+     * @readonly
+     * @required
+     */
+    private List<MavenProject> reactorProjects;
 
-	private LicensingReport report;
+    private LicensingReport report;
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
 
-		readLicensingRequirements();
+        readLicensingRequirements();
 
-		report = new LicensingReport();
+        report = new LicensingReport();
 
-		XStream xstream = new XStream(new StaxDriver());
-		xstream.processAnnotations(ArtifactWithLicenses.class);
-		xstream.processAnnotations(LicensingReport.class);
+        XStream xstream = new XStream(new StaxDriver());
+        xstream.processAnnotations(ArtifactWithLicenses.class);
+        xstream.processAnnotations(LicensingReport.class);
 
-		for (MavenProject p : reactorProjects) {
+        for (MavenProject p : reactorProjects) {
 
-			File licenseXml = new File(p.getBuild().getDirectory(), thirdPartyLicensingFilename);
+            File licenseXml = new File(p.getBuild().getDirectory(), thirdPartyLicensingFilename);
 
-			if (licenseXml.canRead()) {
-				LicensingReport artifactReport = (LicensingReport) xstream.fromXML(licenseXml);
-				getLog().debug("Successfully turned " + licenseXml + " into " + artifactReport);
-				report.combineWith(artifactReport);
-			} else {
-				getLog().debug("No report file found at: " + licenseXml.getAbsolutePath());
-			}
-		}
+            if (licenseXml.canRead()) {
+                LicensingReport artifactReport = (LicensingReport) xstream.fromXML(licenseXml);
+                getLog().debug("Successfully turned " + licenseXml + " into " + artifactReport);
+                report.combineWith(artifactReport);
+            } else {
+                getLog().debug("No report file found at: " + licenseXml.getAbsolutePath());
+            }
+        }
 
-		File outputFile = new File(project.getBuild().getDirectory(), aggregatedThirdPartyLicensingFilename);
-		report.writeReport(outputFile);
+        File outputFile = new File(project.getBuild().getDirectory(), aggregatedThirdPartyLicensingFilename);
+        report.writeReport(outputFile);
 
-		projectHelper.attachArtifact(project, outputFile, "aggregated-third-party-licensing");
+        projectHelper.attachArtifact(project, outputFile, "aggregated-third-party-licensing");
 
-	}
+    }
 
 }

@@ -38,6 +38,7 @@ public abstract class AbstractLicensingTest {
         model.setArtifactId("artifactId");
         model.setVersion("1.0");
         model.setPackaging("jar");
+        model.setUrl("http://linuxstuff.org/for-testing");
 
         mavenProject.setLicenses(new ArrayList<License>());
 

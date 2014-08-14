@@ -3,8 +3,11 @@ package org.linuxstuff.mojo.licensing.model;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.annotation.Nonnull;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.linuxstuff.mojo.licensing.FileUtil;
@@ -12,6 +15,7 @@ import org.linuxstuff.mojo.licensing.FileUtil;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 @XStreamAlias("licensing")
@@ -90,23 +94,32 @@ public class LicensingReport {
 
     }
 
-    public void writeReport(File file) throws MojoExecutionException {
+    public void writeReport(@Nonnull File file) throws MojoExecutionException {
 
         XStream xstream = new XStream(new StaxDriver());
 
         xstream.processAnnotations(LicensingReport.class);
         xstream.processAnnotations(ArtifactWithLicenses.class);
 
+        FileOutputStream fos = null;
+
         try {
             FileUtil.createNewFile(file);
 
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file);
 
-            xstream.toXML(this, fos);
+            xstream.marshal(this, new PrettyPrintWriter(new OutputStreamWriter(fos)));
 
-            fos.close();
         } catch (IOException e) {
             throw new MojoExecutionException("Failure while creating new file " + file, e);
+        } finally {
+            if (fos != null ){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Failure while closing new file "+file,e);
+                }
+            }
         }
     }
 

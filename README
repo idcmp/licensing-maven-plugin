@@ -112,5 +112,4 @@ Here's an example of how to bind the plugin into your build:
 ------------------------------
 
 TODO attach aggregated-third-party-licensing.xml to be deployed
-TODO format output XML 
 TODO make a proper maven site for the plugin

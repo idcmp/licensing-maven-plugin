@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.License;
@@ -182,6 +184,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
      * 
      * @return Does not return null, will return an empty set.
      */
+    @Nonnull
     protected Collection<MavenProject> getProjectDependencies(MavenProject aProject) {
 
         getLog().debug("Getting dependencies for project: " + aProject.getId());

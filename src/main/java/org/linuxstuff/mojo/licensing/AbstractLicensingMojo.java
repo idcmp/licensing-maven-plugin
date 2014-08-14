@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.License;
 import org.apache.maven.plugin.AbstractMojo;
@@ -287,12 +288,15 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 
 			List<License> embeddedLicenses = mavenProject.getLicenses();
 			for (License license : embeddedLicenses) {
-				if (license.getName() != null) {
+				if (!StringUtils.isBlank(license.getName())) {
 					licenses.add(licensingRequirements.getCorrectLicenseName(license.getName()));
 				}
 			}
 
-		} else {
+		}
+
+		if (licenses.isEmpty()) {
+			getLog().debug("Licensing: " + mavenProject.getId() + " has no license information.  Loading hardcoded licenses.");
 			Set<String> hardcodedLicenses = licensingRequirements.getLicenseNames(mavenProject.getId());
 			for (String license : hardcodedLicenses) {
 				licenses.add(licensingRequirements.getCorrectLicenseName(license));
@@ -300,7 +304,6 @@ abstract public class AbstractLicensingMojo extends AbstractMojo implements Mave
 		}
 
 		return licenses;
-
 	}
 
 	@Override

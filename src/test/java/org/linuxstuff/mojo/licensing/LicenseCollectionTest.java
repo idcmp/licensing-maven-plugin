@@ -4,6 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.apache.maven.model.License;
 import org.junit.Test;
 import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
@@ -73,6 +77,35 @@ public class LicenseCollectionTest extends AbstractLicensingTest {
 
 		assertEquals(1, mojo.collectLicensesForMavenProject(mavenProject).size());
 		assertEquals("embedded", mojo.collectLicensesForMavenProject(mavenProject).iterator().next());
+		assertTrue(mojo.hasLicense(mavenProject));
+
+	}
+
+	/**
+	 * If we list licenses in licensing requirements *and* the project has
+	 * listed a license, but the project's licenses have no name (xbean-asm4-shaded I'm looking at you!)
+	 * the one in the licensing requirements are used as a fallback.
+	 */
+	@Test
+	public void testFallbackToLicensingRequirementsIfEmbeddedLicensesAreMalformed() {
+		License unnamedLicense = new License();
+		unnamedLicense.setName("");
+		License nullNamedLicense = new License();
+		nullNamedLicense.setName(null);
+
+		mavenProject.getLicenses().add(unnamedLicense);
+		mavenProject.getLicenses().add(nullNamedLicense);
+
+		ArtifactWithLicenses awl = new ArtifactWithLicenses(mavenProject.getId());
+		awl.addLicense("hello1");
+		awl.addLicense("hello2");
+		awl.addLicense("hello3");
+
+		licensingRequirements.addArtifactMissingLicense(awl);
+
+		assertEquals("License Collector should fallback to licensing requirements block if licenses are invalid",
+				new HashSet<String>(Arrays.asList("hello1", "hello2", "hello3")),
+				mojo.collectLicensesForMavenProject(mavenProject));
 		assertTrue(mojo.hasLicense(mavenProject));
 
 	}

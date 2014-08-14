@@ -33,7 +33,7 @@ public class AggregateReportMojo extends CheckMojo {
     /**
      * The projects in the reactor for aggregation report.
      * 
-     * @parameter expression="${reactorProjects}"
+     * @parameter property="reactorProjects"
      * @readonly
      * @required
      */

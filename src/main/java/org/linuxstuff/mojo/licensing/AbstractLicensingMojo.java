@@ -47,7 +47,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * Local Repository.
      * 
-     * @parameter expression="${localRepository}"
+     * @parameter property="localRepository"
      * @required
      * @readonly
      * @since 1.0
@@ -57,7 +57,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * Remote repositories used for the project.
      * 
-     * @parameter expression="${project.remoteArtifactRepositories}"
+     * @parameter property="project.remoteArtifactRepositories"
      * @required
      * @readonly
      * @since 1.0
@@ -86,7 +86,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * A filter to exclude some scopes.
      * 
-     * @parameter expression="${licensing.excludedScopes}"
+     * @parameter property="licensing.excludedScopes"
      *            default-value="system"
      * @since 1.0
      */
@@ -96,7 +96,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
      * A filter to include only some scopes, if let empty then all scopes will
      * be used (no filter).
      * 
-     * @parameter expression="${licensing.includedScopes}" default-value=""
+     * @parameter property="licensing.includedScopes" default-value=""
      * @since 1.0
      */
     protected String includedScopes;
@@ -104,7 +104,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * A filter to exclude some GroupIds
      * 
-     * @parameter expression="${licensing.excludedGroups}" default-value=""
+     * @parameter property="licensing.excludedGroups" default-value=""
      * @since 1.0
      */
     protected String excludedGroups;
@@ -113,7 +113,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
      * The name of the the XML file which contains licensing information one
      * artifact.
      * 
-     * @parameter expression="${thirdPartyLicensingFilename}"
+     * @parameter property="thirdPartyLicensingFilename"
      *            default-value="third-party-licensing.xml"
      */
     protected String thirdPartyLicensingFilename;
@@ -122,7 +122,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
      * The name of the the XML file which contains the aggregated licensing
      * information for artifacts.
      * 
-     * @parameter expression="${aggregatedThirdPartyLicensingFilename}"
+     * @parameter property="aggregatedThirdPartyLicensingFilename"
      *            default-value="aggregated-third-party-licensing.xml"
      */
     protected String aggregatedThirdPartyLicensingFilename;
@@ -130,7 +130,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * A filter to include only some GroupIds
      * 
-     * @parameter expression="${licensing.includedGroups}" default-value=""
+     * @parameter property="licensing.includedGroups" default-value=""
      * @since 1.0
      */
     protected String includedGroups;
@@ -138,7 +138,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * A filter to exclude some ArtifactsIds
      * 
-     * @parameter expression="${licensing.excludedArtifacts}" default-value=""
+     * @parameter property="licensing.excludedArtifacts" default-value=""
      * @since 1.0
      */
     protected String excludedArtifacts;
@@ -146,7 +146,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * A filter to include only some ArtifactsIds
      * 
-     * @parameter expression="${licensing.includedArtifacts}" default-value=""
+     * @parameter property="licensing.includedArtifacts" default-value=""
      * @since 1.0
      */
     protected String includedArtifacts;
@@ -162,7 +162,7 @@ public abstract class AbstractLicensingMojo extends AbstractMojo implements Mave
     /**
      * Should we skip doing licensing checks?
      * 
-     * @parameter expression="${licensing.skip}" default-value="false"
+     * @parameter property="licensing.skip" default-value="false"
      */
     protected boolean skip;
 

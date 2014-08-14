@@ -32,7 +32,7 @@ public class CollectReportsMojo extends AbstractLicensingMojo {
     /**
      * The projects in the reactor for aggregation report.
      * 
-     * @parameter expression="${reactorProjects}"
+     * @parameter property="reactorProjects"
      * @readonly
      * @required
      */

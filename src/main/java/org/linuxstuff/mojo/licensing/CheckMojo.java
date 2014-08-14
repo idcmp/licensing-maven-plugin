@@ -28,7 +28,7 @@ public class CheckMojo extends AbstractLicensingMojo {
     /**
      * A fail the build if any artifacts are missing licensing information.
      * 
-     * @parameter expression="${failIfMissing}" default-value="true"
+     * @parameter property="failIfMissing" default-value="true"
      * @since 1.0
      */
     protected boolean failIfMissing;
@@ -36,7 +36,7 @@ public class CheckMojo extends AbstractLicensingMojo {
     /**
      * A fail the build if any artifacts have disliked licenses.
      * 
-     * @parameter expression="${failIfDisliked}" default-value="true"
+     * @parameter property="failIfDisliked" default-value="true"
      * @since 1.0
      */
     protected boolean failIfDisliked;

@@ -39,6 +39,13 @@ public class AggregateReportMojo extends CheckMojo {
      */
     private List<MavenProject> reactorProjects;
 
+    /**
+     * Should the generated report be attached to the reactor.
+     *
+     * @parameter property="attach" default-value="true"
+     */
+    private boolean attach;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -64,6 +71,9 @@ public class AggregateReportMojo extends CheckMojo {
 
         bigReport.writeReport(file);
 
+        if (attach) {
+            projectHelper.attachArtifact(project, "xml", "license-report", file);
+        }
     }
 
     private boolean shouldReportOn(MavenProject project) {

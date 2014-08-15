@@ -23,14 +23,6 @@ import org.linuxstuff.mojo.licensing.model.LicensingReport;
 public class AggregateReportMojo extends CheckMojo {
 
     /**
-     * Maven ProjectHelper.
-     * 
-     * @component
-     * @readonly
-     */
-    private MavenProjectHelper projectHelper;
-
-    /**
      * The projects in the reactor for aggregation report.
      * 
      * @parameter property="reactorProjects"
@@ -38,13 +30,6 @@ public class AggregateReportMojo extends CheckMojo {
      * @required
      */
     private List<MavenProject> reactorProjects;
-
-    /**
-     * Should the generated report be attached to the reactor.
-     *
-     * @parameter property="attach" default-value="true"
-     */
-    private boolean attach;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

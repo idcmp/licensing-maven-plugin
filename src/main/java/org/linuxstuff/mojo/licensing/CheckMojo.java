@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectHelper;
 import org.linuxstuff.mojo.licensing.model.ArtifactWithLicenses;
 import org.linuxstuff.mojo.licensing.model.LicensingReport;
 
@@ -26,6 +27,14 @@ import org.linuxstuff.mojo.licensing.model.LicensingReport;
 public class CheckMojo extends AbstractLicensingMojo {
 
     /**
+     * Maven ProjectHelper.
+     *
+     * @component
+     * @readonly
+     */
+    protected MavenProjectHelper projectHelper;
+
+    /**
      * A fail the build if any artifacts are missing licensing information.
      * 
      * @parameter property="failIfMissing" default-value="true"
@@ -42,9 +51,12 @@ public class CheckMojo extends AbstractLicensingMojo {
     protected boolean failIfDisliked;
 
     /**
-     * Fail the build if any dependencies are either under disliked licenses or
-     * are missing licensing information.
+     * Should the generated report be attached to the reactor.
+     *
+     * @parameter property="attach" default-value="true"
      */
+    protected boolean attach;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -60,6 +72,10 @@ public class CheckMojo extends AbstractLicensingMojo {
         File file = new File(project.getBuild().getDirectory(), thirdPartyLicensingFilename);
 
         report.writeReport(file);
+
+        if (attach) {
+            projectHelper.attachArtifact(project, "xml", "license-report", file);
+        }
 
         checkForFailure(report);
 
